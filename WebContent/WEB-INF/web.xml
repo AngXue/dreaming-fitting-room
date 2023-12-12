@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://"
+	version="3.0">
+	<display-name>restful</display-name>
+	<context-param>
+		<param-name>resteasy.resources</param-name>
+		<param-value>restful.api.AccountAPI,restful.api.ClothCategoryAPI,restful.api.ClothAPI</param-value>
+	</context-param>
+	<context-param>
+		<param-name>resteasy.providers</param-name>
+		<param-value></param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+		</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+	</servlet>
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/</param-value>
+	</context-param>
+	<servlet-mapping>
+		<servlet-name>Resteasy</servlet-name>
+		<url-pattern></url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+    	<servlet-name>Resteasy</servlet-name>
+    	<url-pattern>/test/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>Resteasy</servlet-name>
+    	<url-pattern>/account/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>Resteasy</servlet-name>
+    	<url-pattern>/clothCategory/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>Resteasy</servlet-name>
+    	<url-pattern>/cloth/*</url-pattern>
+  	</servlet-mapping>
+	<filter>
+		<filter-name>SetCharacterEncoding</filter-name>
+		<filter-class>zea.web.filter.SetCharacterEncodingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>SetCharacterEncoding</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>

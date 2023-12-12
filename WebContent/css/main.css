@@ -1,0 +1,491 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+/* 确保网页大小为当前浏览器的大小 */
+html, 
+body {
+    height: 100%;
+}
+
+/* align-items:垂直方向居中 justify-content:水平方向靠右*/
+.l_body {
+    display: flex;
+    font-size: 14px;
+    justify-content: right;
+    align-items: center;
+    background-image: url(../images/ui/login_1.jpg);
+    background-size: cover; /* 将背景图片放大或缩小以完全覆盖容器 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+    /* background-position: center center; 将背景图片居中显示 */
+}
+
+h2 {
+    font-size: 18px;
+    color: #ffffff;
+    margin-top: 60px;
+    margin-bottom: 30px;
+}
+
+
+
+.login-container,
+.register-container {
+    height: 480px;
+    width: 300px;
+    border-radius: 10px; /* 设置钝角 */
+    box-shadow: 3px 3px 5px rgba(196, 199, 242, 0.8);
+    background-image: url(../images/ui/login_2.jpg);
+    margin-right: 15%;
+    text-align: center;
+    background-size: cover; /* 将背景图片放大或缩小以完全覆盖容器 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+    background-position: center center; /* 将背景图片居中显示 */
+    /* padding-top: 130px; */
+
+}
+
+.register-container {
+    width: 350px;
+    height: 580px;
+    background-image: url(../images/ui/register_01.jpg);
+}
+
+
+#username,
+#username_real,
+#password,
+#password_confirm,
+.gender_box {
+    width: 220px;
+    height: 34px;
+    border-radius: 6px; /* 设置钝角 */
+    border: 1px solid #ccc; /* 灰色边框 */
+    margin-bottom: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#username:focus,
+#username_real:focus,
+#password:focus,
+#password_confirm:focus{
+    background-color: rgba(255, 255, 255, 0.9);
+    outline: 2px solid rgb(253, 145, 40);
+}
+
+
+.gender_box {
+    background-color: transparent;
+    border: none;
+    display: inline-block;
+    line-height: 34px;
+    font-size: 14px;
+    color: rgb(51, 62, 92);
+    text-align: left;
+
+}
+
+.gender_prompt {
+    display: inline-block;
+    width: 80px;
+    color: #fff;
+    font-weight: 500;
+    text-align: right;
+}
+
+.btn_login {
+    width: 220px;
+    height: 34px;
+    margin-top: 50px;
+    /* margin-bottom: 4px; */
+    border-radius: 6px; /* 设置钝角 */
+    background-color: rgba(196, 199, 242, 0.8);
+    border: none;
+    font-size: 18px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.btn_register,
+.btn_save {
+    width: 220px;
+    height: 34px;
+    margin-top: 20px;
+    border-radius: 6px; /* 设置钝角 */
+    background-color: rgba(196, 199, 242, 0.9);
+    border: none;
+    font-size: 18px;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+
+.footer_login,
+.footer_register {
+    width: 220px;
+    height: 34px;
+    display: inline-block;
+    /* background-color: #fff; */
+}
+
+.btn-link {
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    font-size: 14px;
+    line-height: 34px;
+    /* color: rgb(196, 199, 242); */
+    /* color: rgb(51, 62, 92) */
+}
+
+.footer_left {
+    float: left;
+    /* background-color: pink; */
+    width: 50%;
+    text-align: left;
+}
+.footer_right {
+    float: right;
+    /* background-color: pink; */
+    width: 50%;
+    text-align: right;
+}
+
+a {
+    text-decoration: none; 
+    /* color: rgb(51, 62, 92); */
+    color: rgb(253, 145, 40);
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+.model_prompt {
+    background-color: rgba(253, 145, 40,0.7);
+    height: 25px;
+    line-height: 25px;
+    color: #fff;
+    font-weight: 700;
+    /* border-bottom: 1px solid rgb(231, 195, 171); */
+
+}
+
+.segmenting {
+    height: 2px;
+    background-color: rgba(196, 199, 242, 0.5);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.maleAvatar {
+    display: none;
+}
+
+.femaleAvatar {
+    display: none;
+}
+
+
+.img_avatar {
+    height: 100px;
+    transition: border 0.1s ease-out, box-shadow 0.1s ease-out;
+    cursor: pointer;
+}
+
+#maleAvatar_02 + .img_avatar {
+    padding: 0 5.5px;
+}
+
+#maleAvatar_01 + .img_avatar {
+    padding: 0 6.5px;
+}
+
+#femaleAvatar_01 + .img_avatar {
+    padding: 0 4px;
+}
+
+
+.maleAvatar label {
+    display: inline-block;
+    height: 100px;
+    width: 80px;
+}
+
+.femaleAvatar label {
+    display: inline-block;
+    height: 100px;
+    width: 80px;
+}
+
+
+.gender-label {
+    /* display: inline-block; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 4px; */
+    margin-right: 10px;
+}
+
+.gender-label:hover,
+.gender-label:hover input{
+    cursor: pointer;
+}
+
+.img_radio {
+    display: none;
+}
+
+.img_radio:hover + .img_avatar {
+    border-top: 2px solid rgb(137, 130, 120);
+    border-left: 2px solid rgb(137, 130, 120);
+    box-shadow: 5px 5px 10px rgba(5, 4, 11, 0.8);
+}
+
+.img_radio:checked + .img_avatar {
+    border-top: 2px solid rgb(43, 39, 40);
+    border-left: 2px solid rgb(43, 39, 40);
+    border-bottom: 2px solid rgb(236, 255, 255);
+    border-right: 2px solid rgb(236, 255, 255);
+}
+
+.wk_body {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    background-image: url(../images/ui/login_1.jpg);
+    background-size: cover; /* 将背景图片放大或缩小以完全覆盖容器 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+}
+
+.banner {
+    background-color: rgb(200, 195, 195);
+    height: 35px;
+    text-indent: 2em;
+}
+
+.user_now_prompt {
+    line-height: 35px;
+    color: rgb(143, 171, 241);
+    font-weight: 600;
+}
+
+.user_now {
+    color: rgb(243, 132, 151);
+}
+
+/* .log {
+    text-indent: 0em;
+    float: right;
+    display: block;
+    height: 35px;
+    line-height: 35px;
+    color: rgb(155, 86, 187);
+    font-weight: 700;
+    background-color: #fff;
+} */
+
+.log {
+    text-indent: 0em;
+    float: right;
+    margin-right: 20px;
+    height: 35px;
+    width: 150px;
+    line-height: 35px;
+    /* background-color: #fff; */
+    background-image: url(../images/ui/log_dr.png);
+    background-size: cover; /* 将背景图片放大或缩小以完全覆盖容器 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+}
+
+.mbody {
+    flex: 1;
+    display: flex;
+    /* background-color: #fff; */
+    /* height: 100%; */
+    /* flex: 1; */
+}
+
+.mbody_left {
+    /* float: left; */
+    width: 80px;
+    /* height: 100%; */
+    background-color: rgb(151, 178, 229);
+}
+
+.mbody_right {
+    flex: 1;
+    /* float: right; */
+    /* margin-left: 80px; */
+    /* width: 100%; */
+    /* height: 100%; */
+    /* background-color: pink; */
+} 
+
+.mbody_left ul li button{
+    width: 72px;
+    height: 72px;
+    margin-bottom: 20px;
+    margin-left: 4px;
+    background-color: transparent;
+    border: none;
+}
+
+.mbody_left ul li:first-of-type {
+    margin-top: 20px;
+}
+
+.mbody_left ul li button img {
+    width: 100%;
+}
+
+.mbody_left ul li button:hover{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10%;
+}
+
+.mbody_left ul li button:active img{
+    width: 80%;
+}
+
+.mbody_right {
+    position: relative;
+    /* height: 300px; 设置容器的高度，可以根据需要调整 */
+    /* border: 1px solid #ccc; 可选：添加边框 */
+}
+
+#info_form {
+    /* background-color: #fff; */
+    /* 使得表单展现在表格的上一层级 */
+    position: absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+    z-index: 2;
+    display: none;
+    background-image: url(../images/ui/register_01.jpg);
+    width: 350px;
+    height: 580px;
+    background-position: center center; /* 将背景图片居中显示 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
+    background-size: cover; /* 将背景图片放大或缩小以完全覆盖容器 */
+    text-align: center;
+    border-radius: 10px; /* 设置钝角 */
+    box-shadow: 3px 3px 5px rgba(196, 199, 242, 0.8);
+}
+
+input:disabled {
+    color: rgb(119, 21, 19);
+    font-weight: 700;
+}
+
+input::placeholder {
+    color: rgba(119, 21, 19, 0.548); /* 你想要的颜色 */
+}
+
+.btn_close {
+    float: right;
+    height: 30px;
+    width: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+.btn_close img:active {
+    height: 80%;
+}
+
+.btn_close img {
+    height: 100%;
+}
+
+/* 第二阶段 */
+
+.box-user_table {
+    height: 420px;
+    width: 700px;
+    overflow-y:auto;
+    position: absolute; 
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+    z-index: 1;
+    display: none;  
+}
+
+#user_table {  
+
+    /* width: 200px; /* 或其他你需要的尺寸 */ 
+    margin: 0 auto;
+
+    border-collapse: collapse;  
+}  
+#user_table th,
+#user_table td,
+#user_table tr {  
+    border: 1px solid #ddd;  
+    padding: 0px 8px;
+    height: 42px;
+    line-height: 42px;  
+    text-align: center;  
+}  
+#user_table td img{
+    height: 37px;
+    vertical-align: middle;
+}
+#user_table tr:hover {
+    background-color: rgb(184, 202, 250);
+} 
+#user_table td:hover {
+    background-color: rgb(237, 159, 208);
+}
+
+
+/* #region服饰类别管理start */
+.box-clothes {
+    height: 600px;
+    width: 1100px;
+    overflow-y:auto;
+    position: absolute; 
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+    z-index: 1;
+    display: none;  
+}
+
+.clothes {
+    display: inline-block;
+    width: 350px;
+    height: 200px;
+    border: 1px solid black;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.clothes-head {
+    height: 30px;
+    width: 180px;
+    margin: 10px auto;
+}
+
+.btn-clothes {
+    float: left;
+}
+
+
+/* #endregion服饰类别管理end */
+
+
+
+

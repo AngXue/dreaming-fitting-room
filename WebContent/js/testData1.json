@@ -1,0 +1,10 @@
+[
+    {
+        "name": "testUser1",
+        "gender": "male",
+        "passwd": "hashedPassword",  
+        "realName": "John Doe",
+        "modelID": "maleAvatar_02",
+        "identity":1
+    }
+]
