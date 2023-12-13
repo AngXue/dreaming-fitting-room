@@ -160,40 +160,45 @@ function logValidateAndSubmit() {
 
 
 // //模拟一个登录成功的 result 数据
-// function logValidateAndSubmit() {  
-//         var simulatedSuccessResult = {  
-//             code: 0,  
-//             description: "登录成功",  
-//             data: {  
-//                 name: "testUser",  
-//                 gender: "male",  
-//                 passwd: "hashedPassword",  // 填充模拟的密码，实际应用中应该是加密后的密码  
-//                 realName: "John Doe",  
-//                 modelID: "maleAvatar_02",  // 填充模拟的模型ID  
-//             },  
-//         };  
+// function logValidateAndSubmit() {
+//         var simulatedSuccessResult = {
+//             code: 0,
+//             description: "登录成功",
+//             data: {
+//                 name: "testUser",
+//                 gender: "male",
+//                 passwd: "hashedPassword",  // 填充模拟的密码，实际应用中应该是加密后的密码
+//                 realName: "John Doe",
+//                 modelID: "maleAvatar_02",  // 填充模拟的模型ID
+//             },
+//         };
 
-//         handleLoginResult(simulatedSuccessResult);  
+//         handleLoginResult(simulatedSuccessResult);
 // }
 
-// function handleLoginResult(result) {  
-//     if (result.code === 0) {  
-//         alert(result.description);  
-//         var user = result.data;  
-//         sessionStorage.setItem('loggedInUser', JSON.stringify(user));  
-//         console.log("User ID:", user.id);  
-//         console.log("Username:", user.name);  
-//         console.log("Gender:", user.gender);  
-//         console.log("Real Name:", user.realName);  
-//         console.log("Model ID:", user.modelID);  
-//         window.location.href = 'index.html';  
-//     } else {  
-//         alert(result.description);  
-//     }  
+// function handleLoginResult(result) {
+//     if (result.code === 0) {
+//         alert(result.description);
+//         var user = result.data;
+//         sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+//         console.log("User ID:", user.id);
+//         console.log("Username:", user.name);
+//         console.log("Gender:", user.gender);
+//         console.log("Real Name:", user.realName);
+//         console.log("Model ID:", user.modelID);
+//         window.location.href = 'index.html';
+//     } else {
+//         alert(result.description);
+//     }
 // }
 
+function selfFunction() {
+    var userNow = $.parseJSON(sessionStorage.getItem('loggedInUser'));
+    updateUser(userNow.name);
+}
 
-function selfFunction(userT = null) {
+
+function selfFunctionB(userT = null) {
 
     // var userFormContainer = document.querySelector('.info_form');
     // userFormContainer.style.display = 'block';
@@ -272,12 +277,14 @@ function saveUserInfo(userT = null) {
         updatedUserInfo.passwd = password;
         alert('用户选择不修改密码');
 
+        var nowUser = $.parseJSON(sessionStorage.getItem('loggedInUser'));
         // 提交数据到后端  
-        if (userT) {
-            submitData(updatedUserInfo, null);
+        if (userT.name == nowUser.name) {
+            submitData(updatedUserInfo, true);
             getAllUsers();
         } else {
-            submitData(updatedUserInfo, true);
+            submitData(updatedUserInfo, null);
+            getAllUsers();
         }
 
     } else {
@@ -289,12 +296,15 @@ function saveUserInfo(userT = null) {
             // 提示密码修改成功  
             alert('信息修改成功');
 
+            var nowUser = $.parseJSON(sessionStorage.getItem('loggedInUser'));
             // 提交数据到后端  
-            if (userT) {
-                submitData(updatedUserInfo, null);
+            if (userT.name == nowUser.name) {
+                submitData(updatedUserInfo, true);
                 getAllUsers();
             } else {
-                submitData(updatedUserInfo, true);
+                submitData(updatedUserInfo, null);
+                console.log("提交成功")
+                getAllUsers();
             }
         } else {
             alert('两次输入的密码不一致，请重新输入');
@@ -323,6 +333,7 @@ function submitData(updatedUserInfo, state) {
                 // 存储更新后的用户信息到 sessionStorage  
                 if (state) {
                     sessionStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+                    console.log("当前用户已更新！！！")
                 }
                 // 输出更新后的用户信息到控制台（实际应用中根据需求进行操作）  
                 console.log("Updated Username:", updatedUser.username);
@@ -354,9 +365,12 @@ $(document).ready(function () {
     $('.btn_close').on('click', function (event) {
         event.preventDefault();
         // 移除之前绑定的点击事件处理程序
+        $(".btn_save").removeAttr('onclick'); // 移除原始的onclick属性
         $(".btn_save").off('click'); // 移除之前的点击事件处理程序
-        console.log("清除绑定成功");
-        $(".btn_save").on('click', saveUserInfo);
+        console.log("清除绑定成功close");
+        $(".btn_save").on('click', function () {
+            saveUserInfo();
+        });
         console.log("Close button clicked");
         $('.info_form').hide();
         // 可以继续执行其他操作
@@ -415,6 +429,7 @@ function getAllUsers() {
             row.append($('<th>').text('是否为管理员'));
             row.append($('<th>').text('操作'));
             data.data.forEach(function (user, index) {
+                console.log('User ' + index + ': ' + JSON.stringify(user));
                 var row = $('<tr>').appendTo(table);
                 row.append($('<td>').text(user.id));
                 row.append($('<td>').text(user.name));
@@ -426,7 +441,6 @@ function getAllUsers() {
                 // temp_img.css('height', '30px');
                 row.append($('<td>').text(user.identity == 1 ? '是' : '否'));
                 row.append($('<td>').html('<button onclick="updateUser(' + "'" + user.name + "'" + ')">修改</button> <button onclick="deleteUser(' + "'" + user.name + "'" + ')">删除</button>'));
-                console.log('User ' + index + ': ' + JSON.stringify(user));
             });
         },
         error: function (error) {
@@ -447,12 +461,15 @@ function updateUser(name) {
                 // 获取用户信息
                 var user = data.data;
                 // 显示用户信息表单
-                selfFunction(JSON.stringify(user));
+                selfFunctionB(JSON.stringify(user));
                 $(document).ready(function () {
-//                    $(".btn_save").attr("onclick", "saveUserInfo('" + JSON.stringify(user) + "')");
-		        	$(".btn_save").on('click', function() {
-		        	    saveUserInfo(JSON.stringify(user));
-		        	});
+                    //                    $(".btn_save").attr("onclick", "saveUserInfo('" + JSON.stringify(user) + "')");
+                    $(".btn_save").removeAttr('onclick'); // 移除原始的onclick属性
+                    $(".btn_save").off('click'); // 移除之前的点击事件处理程序
+                    console.log("清除绑定成功xiugai");
+                    $(".btn_save").on('click', function () {
+                        saveUserInfo(JSON.stringify(user));
+                    });
                 });
             } else {
                 alert(data.description);
@@ -525,7 +542,7 @@ function getAllclothes() {
             row.append($('<span>').text('名称：'));
             row.append($('<input>').attr('type', 'text').attr('id', 'clothName'));
             row.append($('<div>').addClass('clothes-head').html('<button id="add-cls-btn" class="btn-clothes" onclick="addClothes()">添加</button>'));
-            
+
             data.data.forEach(function (cloth, index) {
                 var row = $('<div>').addClass('clothes').appendTo(clothesBox);
                 row.append($('<input>').addClass('clothHideId').attr('type', 'text').val(cloth.id).css('display', 'none'))
@@ -550,7 +567,7 @@ function addClothes() {
     // 从页面中获取用户输入的服饰编号和名称
     var clothId = $('#clothId').val();
     var clothName = $('#clothName').val();
-    
+
 
     // 构造用户修改后的信息对象  
     var addACloth = {
@@ -596,9 +613,9 @@ function submitClothesData(addACloth) {
 //保存服饰函数
 function saveClothes(id) {
     // 从页面中获取用户输入的服饰编号和名称
-    var clothId = $('#'+id+'~ .bianhao').val();
-    var clothName = $('#'+id+'~ .mingcheng').val();
-    
+    var clothId = $('#' + id + '~ .bianhao').val();
+    var clothName = $('#' + id + '~ .mingcheng').val();
+
 
     // 构造用户修改后的信息对象  
     var saveACloth = {
