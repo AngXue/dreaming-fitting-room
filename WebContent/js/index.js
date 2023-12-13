@@ -683,7 +683,7 @@ function getAllclothes() {
                 row.append($('<br>'));
                 row.append($('<span>').text('名称：'));
                 row.append($('<input>').addClass('mingcheng').attr('type', 'text').val(cloth.clothCategoryName))
-                row.append($('<div>').addClass('clothes-head').html('<button class="btn-clothes" onclick="saveClothes(' + "'" + cloth.id + "'" + ')">保存</button><button class="btn-clothes" onclick="delClothes(' + cloth.clothCategoryID + ')">删除</button>'));
+                row.append($('<div>').addClass('clothes-head').html('<button class="btn-clothes" onclick="saveClothes(' + "'" + cloth.id + "'" + ')">保存</button><button class="btn-clothes" onclick="delClothes(' + "'" + cloth.clothCategoryID + "'" + ')">删除</button>'));
                 console.log('Cloth ' + index + ': ' + JSON.stringify(cloth));
             });
         },
@@ -722,29 +722,52 @@ function saveClothes(id) {
 
 
 //删除服饰函数 
-function delClothes(cloth) {
-    console.log(cloth)
-    var result = confirm("您确认要删除编号为" + cloth + " 的信息吗?");
+function delClothes(clothCategoryID) {
+    console.log(clothCategoryID)
+    var result = confirm("您确认要删除编号为" + clothCategoryID + " 的信息吗?");
     if (!result) {
         // 如果用户点击了"取消"，则不执行任何操作  
         return;
     }
-
     $.ajax({
-        url: 'http://127.0.0.1:8080/suit/clothCategory/remove',
+        url: 'http://127.0.0.1:8080/suit/clothCategory/getSingleClothCategory',
         type: 'POST',
-        data: JSON.stringify(cloth),
-        dataType: 'json',
+        data: JSON.stringify({ clothCategoryID: clothCategoryID }),
         contentType: 'application/json',
+        dataType: 'json',
         success: function (data) {
-            // 如果删除成功，更新表格  
-            console.log(data);
-            getAllclothes();
+            if (data.code === 0) {
+                // 获取用户信息
+                var aCloth = data.data;
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/suit/clothCategory/remove',
+                    type: 'POST',
+                    data: JSON.stringify(aCloth),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        // 如果删除成功，更新表格  
+                        getAllclothes();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert('删除服饰信息时出错');
+                    }
+                });
+            } else {
+                alert(data.description);
+            }
         },
         error: function (error) {
-            console.log(error);
-            alert('删除服饰信息时出错');
+            console.error('Error:', error);
+            alert('获取用户信息时出错');
         }
     });
+
+
+
+
+
+
 
 }
