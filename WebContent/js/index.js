@@ -625,6 +625,89 @@ function addClothes() {
 }
 
 // 提交数据到后端的函数，接受一个回调函数作为参数
+// function submitClothesData(addACloth, callback) {
+//     console.log("开始submit！！！!!");
+//     $.ajax({
+//         url: 'http://127.0.0.1:8080/suit/clothCategory/add',
+//         type: 'POST',
+//         data: JSON.stringify(addACloth),
+//         contentType: 'application/json',
+//     })
+//         .done(function (response) {
+//             // 处理后端返回的结果
+//             if (response.code === 0) {
+//                 // alert(response.description);
+//                 // 调用传入的回调函数
+//                 if (typeof callback === 'function') {
+//                     callback();
+//                 }
+//                 alert(response.description);
+//             } else {
+//                 alert(response.description);
+//             }
+//         })
+//         .fail(function (errorThrown) {
+//             console.error('Error:', errorThrown);
+//             alert('提交信息过程中发生错误，请重试。');
+//         });
+// }
+// 提交数据到后端的函数，接受一个回调函数作为参数
+// function submitClothesData(addACloth, callback) {
+//     console.log("开始submit！！！!!");
+//     $.ajax({
+//         url: 'http://127.0.0.1:8080/suit/clothCategory/add',
+//         type: 'POST',
+//         data: JSON.stringify(addACloth),
+//         contentType: 'application/json',
+//     })
+//         .done(function (response) {
+//             // 处理后端返回的结果
+//             if (response.code === 0) {
+//                 alert(response.description);
+//                 // 调用传入的回调函数
+//                 if (typeof callback === 'function') {
+//                     callback();
+//                 }
+//             } else {
+//                 alert(response.description);
+//             }
+//         })
+//         .fail(function (errorThrown) {
+//             console.error('Error:', errorThrown);
+//             alert('提交信息过程中发生错误，请重试。');
+//         });
+// }
+
+
+
+// // 提交数据到后端的函数，接受一个回调函数作为参数
+// function submitSaveClothesData(saveACloth, callback) {
+//     console.log("开始submit！！！!!");
+//     $.ajax({
+//         url: 'http://127.0.0.1:8080/suit/clothCategory/update',
+//         type: 'POST',
+//         data: JSON.stringify(saveACloth),
+//         contentType: 'application/json',
+//     })
+//         .done(function (response) {
+//             // 处理后端返回的结果
+//             if (response.code === 0) {
+//                 alert(response.description);
+//                 // 调用传入的回调函数
+//                 if (typeof callback === 'function') {
+//                     callback();
+//                 }
+//             } else {
+//                 alert(response.description);
+//             }
+//         })
+//         .fail(function (errorThrown) {
+//             console.error('Error:', errorThrown);
+//             alert('提交信息过程中发生错误，请重试。');
+//         });
+// }
+
+// 提交数据到后端的函数，接受一个回调函数作为参数
 function submitClothesData(addACloth, callback) {
     console.log("开始submit！！！!!");
     $.ajax({
@@ -634,21 +717,48 @@ function submitClothesData(addACloth, callback) {
         contentType: 'application/json',
     })
         .done(function (response) {
-            // 处理后端返回的结果  
+            // 处理后端返回的结果
             if (response.code === 0) {
                 // 调用传入的回调函数
                 if (typeof callback === 'function') {
                     callback();
                 }
-            } else {
-                alert(response.description);
             }
+            // 显示后端返回的消息
+            alert(response.description);
         })
         .fail(function (errorThrown) {
             console.error('Error:', errorThrown);
             alert('提交信息过程中发生错误，请重试。');
         });
 }
+
+// 提交数据到后端的函数，接受一个回调函数作为参数
+function submitSaveClothesData(saveACloth, callback) {
+    console.log("开始submit！！！!!");
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/clothCategory/update',
+        type: 'POST',
+        data: JSON.stringify(saveACloth),
+        contentType: 'application/json',
+    })
+        .done(function (response) {
+            // 处理后端返回的结果
+            if (response.code === 0) {
+                // 调用传入的回调函数
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+            // 显示后端返回的消息
+            alert(response.description);
+        })
+        .fail(function (errorThrown) {
+            console.error('Error:', errorThrown);
+            alert('提交信息过程中发生错误，请重试。');
+        });
+}
+
 
 // 获取所有服饰信息
 function getAllclothes() {
@@ -716,7 +826,7 @@ function saveClothes(id) {
         // 提交数据到后端
         // submitClothesData(saveACloth);
         // getAllclothes();
-        submitClothesData(saveACloth, getAllclothes);
+        submitSaveClothesData(saveACloth, getAllclothes);
     } else {
         alert('服饰信息不完整！请重新输入')
     }
@@ -751,6 +861,8 @@ function delClothes(clothCategoryID) {
                     success: function (data) {
                         // 如果删除成功，更新表格  
                         getAllclothes();
+                        // 显示后端返回的消息
+                        alert(data.description);
                     },
                     error: function (error) {
                         console.log(error);
