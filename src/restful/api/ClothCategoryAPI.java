@@ -2,6 +2,7 @@ package restful.api;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -10,6 +11,7 @@ import javax.ws.rs.Produces;
 import restful.bean.Result;
 import restful.database.EM;
 import restful.entity.ClothCategory;
+import restful.entity.User;
 
 @Path("/clothCategory")
 public class ClothCategoryAPI {
@@ -64,6 +66,20 @@ public class ClothCategoryAPI {
 	    
 	    return new Result(0, "更新成功", "", "");
 	}
+	
+	@POST
+	@Path("/getSingleClothCategory")
+	@Consumes("application/json;charset=UTF-8")
+	@Produces("application/json;charset=UTF-8")
+	public Result getSingleClothCategory(ClothCategory clothCategory) {
+		ClothCategory result = EM.getEntityManager()
+			.createNamedQuery("ClothCategory.findByClothCategoryID", ClothCategory.class)
+			.setParameter("clothCategoryID", clothCategory.getClothCategoryID())
+			.getSingleResult();
+
+		return new Result(0, "获取成功", result, "");
+	}
+
 	
 	@POST
 	@Path("/getAll")
