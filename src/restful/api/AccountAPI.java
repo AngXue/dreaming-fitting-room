@@ -38,16 +38,12 @@ public class AccountAPI {
 	@Consumes("application/json;charset=UTF-8")
 	@Produces("application/json;charset=UTF-8")
 	public Result getSingleUser(User user) {
-		List<User> result = EM.getEntityManager()
+		User result = EM.getEntityManager()
 				.createNamedQuery("User.findByName", User.class)
 				.setParameter("name", user.getName())
-				.getResultList();
+				.getSingleResult();
 			
-		if(!result.isEmpty()) {
-			return new Result(0, "获取成功", result.get(0), "");
-		}
-		
-		return new Result(-1, "无此账户", user, "");
+		return new Result(0, "获取成功", result, "");
 	}
 	
 	@POST

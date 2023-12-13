@@ -9,6 +9,8 @@ import javax.persistence.Table;
 @Table(name = "T_ClothCategory")
 @NamedQueries({
 	@NamedQuery(name = "ClothCategory.findAll", query = "SELECT c FROM ClothCategory c"),
+	@NamedQuery(name = "ClothCategory.findByClothCategoryID", query = "SELECT c FROM ClothCategory c WHERE "
+			+ "c.clothCategoryID = :clothCategoryID"),
 	@NamedQuery(name = "ClothCategory.findAllByIDAndName", 
 	query = "SELECT c FROM ClothCategory c WHERE c.clothCategoryID = " 
 	+ ":clothCategoryID AND c.clothCategoryName = :clothCategoryName")

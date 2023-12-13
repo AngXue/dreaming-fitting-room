@@ -59,11 +59,6 @@
   - 后端返回
     - 获取成功: Result(0, "获取成功", User user, "")
     - 获取成功: Result(0, "无此账户", User user, "")
-- 获取服饰类别
-  - url: /clothCategory/getAll
-  - 前端传入: 无
-  - 后端返回
-    - 获取成功: Result(0, "获取成功", List<ClothCategory> clothCategories, "")
 - 添加服饰类别
   - url: /clothCategory/add
   - 前端传入: ClothCategory对象（需要包含clothCategoryID, clothCategoryName）
@@ -80,6 +75,16 @@
   - 前端传入: ClothCategory对象（需要包含所有属性）
   - 后端返回
     - 删除成功: Result(0, "删除成功", "", "")
+- 获取全部服饰类别
+  - url: /clothCategory/getAll
+  - 前端传入: 无
+  - 后端返回
+    - 获取成功: Result(0, "获取成功", List<ClothCategory> clothCategories, "")
+- 获取一个服饰类别
+  - url: /clothCategory/getSingleCategory
+  - 前端传入: ClothCategory对象（需要包含clothCategoryID）
+  - 后端返回
+    - 获取成功: Result(0, "获取成功", ClothCategory clothCategory, "")
 - 添加服饰
   - url: /cloth/add
   - 前端传入: Cloth对象（需要包含除id以外的所有属性）
