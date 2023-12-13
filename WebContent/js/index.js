@@ -279,13 +279,12 @@ function saveUserInfo(userT = null) {
 
         var nowUser = $.parseJSON(sessionStorage.getItem('loggedInUser'));
         // 提交数据到后端  
-        if (userT.name == nowUser.name) {
-            submitData(updatedUserInfo, true);
-            getAllUsers();
-        } else {
-            submitData(updatedUserInfo, null);
-            getAllUsers();
-        }
+       // 提交数据到后端  
+       if (userT.name == nowUser.name) {
+        submitData(updatedUserInfo, true, getAllUsers);
+    } else {
+        submitData(updatedUserInfo, null, getAllUsers);
+    }
 
     } else {
         // 如果用户输入了密码，检查两次输入的密码是否一致  
@@ -299,12 +298,9 @@ function saveUserInfo(userT = null) {
             var nowUser = $.parseJSON(sessionStorage.getItem('loggedInUser'));
             // 提交数据到后端  
             if (userT.name == nowUser.name) {
-                submitData(updatedUserInfo, true);
-                getAllUsers();
+                submitData(updatedUserInfo, true, getAllUsers);
             } else {
-                submitData(updatedUserInfo, null);
-                console.log("提交成功")
-                getAllUsers();
+                submitData(updatedUserInfo, null, getAllUsers);
             }
         } else {
             alert('两次输入的密码不一致，请重新输入');
@@ -312,8 +308,50 @@ function saveUserInfo(userT = null) {
     }
 }
 
+
+
+
+
 // 提交数据到后端的函数  
-function submitData(updatedUserInfo, state) {
+// function submitData(updatedUserInfo, state) {
+//     $.ajax({
+//         url: 'http://127.0.0.1:8080/suit/account/update',
+//         type: 'POST',
+//         data: JSON.stringify(updatedUserInfo),
+//         contentType: 'application/json',
+//     })
+//         .done(function (response) {
+//             // 处理后端返回的结果  
+//             if (response.code === 0) {
+//                 // 可以在这里执行一些成功后的操作  
+//                 // 存储用户信息到 sessionStorage  
+//                 // 获取当前存储在 sessionStorage 中的用户信息  
+//                 var currentStoredUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
+//                 // 更新用户信息  
+//                 // 将后端返回的新用户信息合并到当前用户信息中  
+//                 var updatedUser = Object.assign({}, currentStoredUser, response.data);
+//                 // 存储更新后的用户信息到 sessionStorage  
+//                 if (state) {
+//                     sessionStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+//                     console.log("当前用户已更新！！！")
+//                 }
+//                 // 输出更新后的用户信息到控制台（实际应用中根据需求进行操作）  
+//                 console.log("Updated Username:", updatedUser.username);
+//                 console.log("Updated Gender:", updatedUser.gender);
+//                 console.log("Updated Real Name:", updatedUser.realName);
+//                 console.log("Updated Model ID:", updatedUser.modelID);
+
+//             } else {
+//                 alert(response.description);
+//             }
+//         })
+//         .fail(function (errorThrown) {
+//             console.error('Error:', errorThrown);
+//             alert('保存信息过程中发生错误，请重试。');
+//         });
+// }
+
+function submitData(updatedUserInfo, state, callback) {
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/account/update',
         type: 'POST',
@@ -341,6 +379,10 @@ function submitData(updatedUserInfo, state) {
                 console.log("Updated Real Name:", updatedUser.realName);
                 console.log("Updated Model ID:", updatedUser.modelID);
 
+                // 调用传入的回调函数
+                if (typeof callback === 'function') {
+                    callback();
+                }
             } else {
                 alert(response.description);
             }
@@ -351,15 +393,7 @@ function submitData(updatedUserInfo, state) {
         });
 }
 
-// function closeFunction() {
-//     console.log("关闭！");
-//     $('#info_form').hide();
-// }
-// function closeFunction(event) {
-//     event.preventDefault();
-//     $('.info_form').hide();
-//     // 可以继续执行其他操作
-// }
+
 
 $(document).ready(function () {
     $('.btn_close').on('click', function (event) {
@@ -410,11 +444,51 @@ function userManage(temp_user) {
 
 
 //获取所有用户信息
+// function getAllUsers() {
+//     $.ajax({
+//         url: 'http://127.0.0.1:8080/suit/account/getAll',
+//         type: 'POST',
+//         dataType: 'json',
+//         success: function (data) {
+//             console.log(data);
+//             // 更新表格数据  
+//             var table = $('#user_table');
+//             table.empty(); // 清空表格
+//             var row = $('<tr>').appendTo(table);
+//             row.append($('<th>').text('id'));
+//             row.append($('<th>').text('用户名称'));
+//             row.append($('<th>').text('用户实名'));
+//             row.append($('<th>').text('性别'));
+//             row.append($('<th>').text('模型选择'));
+//             row.append($('<th>').text('是否为管理员'));
+//             row.append($('<th>').text('操作'));
+//             data.data.forEach(function (user, index) {
+//                 console.log('User ' + index + ': ' + JSON.stringify(user));
+//                 var row = $('<tr>').appendTo(table);
+//                 row.append($('<td>').text(user.id));
+//                 row.append($('<td>').text(user.name));
+//                 row.append($('<td>').text(user.realName));
+//                 row.append($('<td>').text(user.gender));
+//                 // row.append($('<td>').text(user.modelID)); 
+//                 row.append($('<td>').html('<img src="../images/data/model/' + user.modelID + '.png" alt="Model Image">'));
+//                 // var temp_img = $('table td').find('img');
+//                 // temp_img.css('height', '30px');
+//                 row.append($('<td>').text(user.identity == 1 ? '是' : '否'));
+//                 row.append($('<td>').html('<button onclick="updateUser(' + "'" + user.name + "'" + ')">修改</button> <button onclick="deleteUser(' + "'" + user.name + "'" + ')">删除</button>'));
+//             });
+//         },
+//         error: function (error) {
+//             console.log(error);
+//         }
+//     });
+// }
+
 function getAllUsers() {
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/account/getAll',
         type: 'POST',
         dataType: 'json',
+
         success: function (data) {
             console.log(data);
             // 更新表格数据  
@@ -448,6 +522,11 @@ function getAllUsers() {
         }
     });
 }
+
+
+
+
+
 // 更新用户数据  
 function updateUser(name) {
     $.ajax({
@@ -523,15 +602,66 @@ function clothesManage(temp_user) {
 }
 
 
-//获取所有服饰信息
+// 添加服饰函数
+function addClothes() {
+    // 从页面中获取用户输入的服饰编号和名称
+    var clothId = $('#clothId').val();
+    var clothName = $('#clothName').val();
+
+    // 构造用户修改后的信息对象  
+    var addACloth = {
+        clothCategoryID: clothId,
+        clothCategoryName: clothName,
+        // 可根据需要添加其他字段  
+    };
+
+    // 如果输入都不为空 
+    if (clothId && clothName) {
+        // 提交数据到后端，并在提交完成后执行获取所有服饰信息
+        submitClothesData(addACloth, getAllclothes);
+    } else {
+        alert('未输入服饰完整信息！请重新输入')
+    }
+}
+
+// 提交数据到后端的函数，接受一个回调函数作为参数
+function submitClothesData(addACloth, callback) {
+    console.log("开始submit！！！!!");
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/clothCategory/add',
+        type: 'POST',
+        data: JSON.stringify(addACloth),
+        contentType: 'application/json',
+    })
+        .done(function (response) {
+            // 处理后端返回的结果  
+            if (response.code === 0) {
+                // 调用传入的回调函数
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            } else {
+                alert(response.description);
+            }
+        })
+        .fail(function (errorThrown) {
+            console.error('Error:', errorThrown);
+            alert('提交信息过程中发生错误，请重试。');
+        });
+}
+
+// 获取所有服饰信息
 function getAllclothes() {
+    console.log("开始getall！！！");
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/clothCategory/getAll',
         type: 'POST',
         dataType: 'json',
         success: function (data) {
             console.log(data);
-            // 更新服饰页面数据  
+            // 更新服饰页面数据
+            // ... （以下代码省略，与原代码相同）
+ //             // 更新服饰页面数据
             var clothesBox = $('#box-clothes');
             clothesBox.empty(); // 清空界面
             var row = $('<div>').addClass('clothes').attr('id', 'add-clothes').appendTo(clothesBox);
@@ -561,52 +691,6 @@ function getAllclothes() {
             console.log(error);
         }
     });
-}
-//添加服饰函数
-function addClothes() {
-    // 从页面中获取用户输入的服饰编号和名称
-    var clothId = $('#clothId').val();
-    var clothName = $('#clothName').val();
-
-
-    // 构造用户修改后的信息对象  
-    var addACloth = {
-        clothCategoryID: clothId,
-        clothCategoryName: clothName,
-        // 可根据需要添加其他字段  
-    };
-
-    // 如果输入都不为空 
-    if (clothId && clothName) {
-        // 提交数据到后端  
-        submitClothesData(addACloth);
-        getAllclothes();
-    } else {
-        alert('未输入服饰完整信息！请重新输入')
-    }
-}
-
-// 提交数据到后端的函数  
-function submitClothesData(addACloth) {
-    $.ajax({
-        url: 'http://127.0.0.1:8080/suit/clothCategory/add',
-        type: 'POST',
-        data: JSON.stringify(addACloth),
-        contentType: 'application/json',
-    })
-        .done(function (response) {
-            // 处理后端返回的结果  
-            if (response.code === 0) {
-                alert(response.description);
-
-            } else {
-                alert(response.description);
-            }
-        })
-        .fail(function (errorThrown) {
-            console.error('Error:', errorThrown);
-            alert('提交信息过程中发生错误，请重试。');
-        });
 }
 
 
