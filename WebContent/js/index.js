@@ -675,11 +675,11 @@ function getAllclothes() {
 
             data.data.forEach(function (cloth, index) {
                 var row = $('<div>').addClass('clothes').appendTo(clothesBox);
-                row.append($('<input>').addClass('clothHideId').attr('type', 'text').val(cloth.id).css('display', 'none'))
+                row.append($('<input>').addClass('clothHideId').attr('type', 'text').val(cloth.id).attr('id', + cloth.id ).css('display', 'none'))
                 row.append($('<div>').text('服饰类别').addClass('clothes-head'));
                 row.append($('<span>').text('编号：'));
                 // row.append($('<span>').text(cloth.clothCategoryID));
-                row.append($('<input>').addClass('biaohao').attr('type', 'text').val(cloth.clothCategoryID))
+                row.append($('<input>').addClass('bianhao').attr('type', 'text').val(cloth.clothCategoryID))
                 row.append($('<br>'));
                 row.append($('<span>').text('名称：'));
                 row.append($('<input>').addClass('mingcheng').attr('type', 'text').val(cloth.clothCategoryName))
@@ -699,6 +699,8 @@ function saveClothes(id) {
     // 从页面中获取用户输入的服饰编号和名称
     var clothId = $('#' + id + '~ .bianhao').val();
     var clothName = $('#' + id + '~ .mingcheng').val();
+    console.log(clothId);
+    console.log(clothName);
 
 
     // 构造用户修改后的信息对象  
@@ -712,8 +714,9 @@ function saveClothes(id) {
     // 如果输入都不为空
     if (clothId && clothName) {
         // 提交数据到后端
-        submitClothesData(saveACloth);
-        getAllclothes();
+        // submitClothesData(saveACloth);
+        // getAllclothes();
+        submitClothesData(saveACloth, getAllclothes);
     } else {
         alert('服饰信息不完整！请重新输入')
     }
