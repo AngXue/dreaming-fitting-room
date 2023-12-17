@@ -36,7 +36,7 @@
                     </button>
                 </li>
                 <li>
-                    <button onclick="myFunction()">
+                    <button onclick="setClothesManage()">
                         <img src="../images/ui/home_service_ui_norm.png">
                     </button>
                 </li>
@@ -126,6 +126,26 @@
 
             <!-- 服饰类别管理 -->
             <div class="box-clothes" id="box-clothes">
+            </div>
+
+            <!-- 服饰管理页面 -->
+            <div class="box-clothes-manage">
+                <!-- 导航条 -->
+                <div class="clothes-navbar">
+                    <span>性别：</span>
+                    <select name="select-gender" id="select-gender">
+                        <option value="male" selected>男</option>
+                        <option value="female">女</option>
+                    </select>
+                    <span>服饰类别：</span>
+                    <select name="select-clothes" id="select-clothes">
+                    </select>
+                    <button id="btn-clothes-navbar">查询</button>
+                </div>
+                <!-- 服饰主页面 -->
+                <div class="content-clothes">
+
+                </div>
             </div>
 
         </div>
