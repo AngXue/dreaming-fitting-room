@@ -5,7 +5,7 @@
 	<display-name>restful</display-name>
 	<context-param>
 		<param-name>resteasy.resources</param-name>
-		<param-value>restful.api.AccountAPI,restful.api.ClothCategoryAPI,restful.api.ClothAPI</param-value>
+		<param-value>restful.api.AccountAPI,restful.api.ClothCategoryAPI,restful.api.ClothAPI,restful.api.DressedClothesAPI</param-value>
 	</context-param>
 	<context-param>
 		<param-name>resteasy.providers</param-name>
@@ -44,6 +44,10 @@
   	<servlet-mapping>
     	<servlet-name>Resteasy</servlet-name>
     	<url-pattern>/cloth/*</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>Resteasy</servlet-name>
+    	<url-pattern>/dressedClothes/*</url-pattern>
   	</servlet-mapping>
 	<filter>
 		<filter-name>SetCharacterEncoding</filter-name>
