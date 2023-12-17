@@ -1,20 +1,26 @@
 package restful.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "T_Cloth")
+@Table(name = "T_DressedCloth")
 @NamedQueries({
-    @NamedQuery(name = "Cloth.findByClothID", query = "SELECT c FROM Cloth c WHERE c.clothID = :clothID"),
-    @NamedQuery(name = "Cloth.findByClothName", query = "SELECT c FROM Cloth c WHERE c.clothName = :clothName"),
-    @NamedQuery(name = "Cloth.findByGenderAndCategory", query = "SELECT c FROM Cloth c WHERE "
-    		+ "c.clothGender = :clothGender AND c.clothCategoryName = :clothCategoryName")
+    @NamedQuery(name = "DressedCloth.findByBelongUserName", query = "SELECT d FROM DressedCloth d "
+    		+ "WHERE d.belongUserName = :belongUserName")
 })
-public class Cloth extends IdEntity {
-
+public class DressedCloth {
+	
+	@Id
+	private String belongUserName;  // 主键
+	
+	private int zIndex;
+	
+	// 从Cloth继承的字段
+    private int id;
     private String clothID;
     private String clothName;
     private double clothPrice;
@@ -22,6 +28,30 @@ public class Cloth extends IdEntity {
     private String clothCategoryName;
     private String clothImageName;
     
+	public int getzIndex() {
+		return zIndex;
+	}
+	
+	public void setzIndex(int zIndex) {
+		this.zIndex = zIndex;
+	}
+	
+	public String getBelongUserName() {
+		return belongUserName;
+	}
+	
+	public void setBelongUserName(String belongUserName) {
+		this.belongUserName = belongUserName;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public String getClothID() {
 		return clothID;
 	}
@@ -69,6 +99,5 @@ public class Cloth extends IdEntity {
 	public void setClothImageName(String clothImageName) {
 		this.clothImageName = clothImageName;
 	}
-
     
 }
