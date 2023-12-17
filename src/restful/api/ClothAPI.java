@@ -83,6 +83,19 @@ public class ClothAPI{
         return new Result(0, "查询成功", clothes, "");
     }
     
+    @POST
+    @Path("/getSingle")
+	@Consumes("application/json;charset=UTF-8")
+    @Produces("application/json;charset=UTF-8")
+    public Result getSingleCloth(Cloth cloth) {
+    	Cloth result = EM.getEntityManager()
+				.createNamedQuery("Cloth.findByClothID", Cloth.class)
+				.setParameter("clothID", cloth.getClothID())
+				.getSingleResult();
+       
+        return new Result(0, "查询成功", result, "");
+    }
+    
     @POST  
     @Path("/uploadImage")  
     @Produces("application/json;charset=UTF-8") 

@@ -116,6 +116,11 @@
   - 前端传入: Cloth对象（需要包含clothGender, clothCategoryName）
   - 后端返回
     - 查询成功: Result(0, "查询成功", List<Cloth> clothes, "")
+- 获取单个服饰
+  - url: /cloth/getSingle
+  - 前端传入: Cloth对象（需要包含clothID）
+  - 后端返回
+    - 查询成功: Result(0, "查询成功", Cloth cloth, "")
 - 上传服饰图片
   - url: /file/uploadClothImage
   - 前端传入: 图片文件
