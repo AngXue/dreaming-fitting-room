@@ -486,243 +486,165 @@ input::placeholder {
 
 /* #endregion服饰类别管理end */
 
-/* 虚拟着装界面 */
-        
-.content{
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    opacity: 0;
-    background-size: cover;
-    /* background-image: url(../images/d5.jpeg); */
-
-}
-
-.A{
-    display: flex;
-    justify-content:start;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    position: relative;
-    top: 30px;
-    left: 50px;
-    width: 600px;
-    height: 400px;
-    padding: 10px;
-    z-index: 50;
-}
-
-.A form{
-    position: relative;
-    padding: 7px;
-    margin: 7px;
-    width: 170px;
-    height: 130px;
-
-    animation-iteration-count: infinite;
-    color: white;
-    padding: 1.2rem;
-    margin: 2rem;
-    width: 12rem;
-    min-height: 6.6rem;
-    margin: 2rem;
-	border-radius: 15px;
-    background-image: linear-gradient( to bottom right, rgb(209 191 219), rgb(92, 163, 211) );
-}
-/* div.top{
-    display: flex;
-    flex-direction: column;
-}
-div.top div{
-    margin: 1.5px 0;
-} */
-.A form img{
-    width: 24px;
-}
-/* div .bottom{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 35px;
-}
-div .bottom span{
-    margin: 0 5px;
-} */
-
-.B{
-    position: relative;
-    top: 0;
-    left: 10px;
-    width: 600px;
-    height: 94vh;
-   
-}
-.model-box{
-    position: relative;
-    top: 60px;
-    left: 120px;
-    width: 250px;
-    height: 550px;
-    z-index: 100;
-    background: transparent;
-}
-
-.model{
+/* #region服饰管理页面start */
+.box-clothes-manage {
+    background-color: rgba(175, 196, 250,0.3);
+    width: 900px;
+    height: 700px;
+    /* border: 1px solid black; */
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 300px;
-    background: transparent;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    margin:auto;
+    display: none;
 }
 
-
-.model-box .shirt,
-.model-box .outwear,
-.model-box .sweater,
-.model-box .tshirt,
-.model-box .belt,
-.model-box .jeans,
-.model-box .shoe,
-.model-box .skirt,
-.model-box .accessory,
-.model-box .bag,
-.model-box .hat,
-.model-box .suit{
-    position: absolute;
-    top: 21px;
-    left: -25px;
-    width: 300px;
-    background: transparent;
-}
-
-.model-box .shirt,
-.model-box .sweater,
-.model—box .tshirt{
-    z-index: 0;
-}
-
-.model-box .jeans{
-	z-index: 0;
-}
-
-.model-box .outwear,
-.model-box .shoe{
-    z-index: 0;
-}
-
-.model-box .belt{
-    z-index: 0;
-}
-
-.model-box .skirt{
-    z-index: 0;
-}
-
-.model-box .accessory,
-.model-box .bag,
-.model-box .hat{
-    z-index: 0;
-}
-
-#modelShadow{
-    position: absolute;
-    top: 100px;
-    left: 80px;
-    width: 270px;
-    background: transparent;
-    z-index: 50;
-}
-#ground{
-    position: absolute;
-    top: 200px;
-    left: 0;
-    width: 450px;
-    background: transparent;
-}
-.price-box{
-    position: relative;
-    top: 0;
-    left: 450px;
-    width: 90px;
+.clothes-navbar {
     height: 50px;
-    border-radius: 5px;
+    width: 500px;
+    background-color: rgb(219, 228, 238);
+    margin: 5px 2px 60px;
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 50px;
+}
+
+#select-gender {
+    height: 20px;
+    width: 70px;
+    margin-right: 30px;
+}
+
+
+
+#select-clothes {
+    padding: 0 5px;
+}
+
+#btn-clothes-navbar {
+    width: 60px;
+    margin-left: 30px;
+}
+
+.content-clothes {
+    height: 585px;
+    /* background-color: aquamarine; */
+    padding-left: 20px;
+    overflow-y: auto;
+}
+
+.box-addClothes {
+    display: inline-block;
+    width: 240px;
+    height: 272px;
+    background-color: red;
+    margin: 0 20px 20px 0;
     text-align: center;
-    border: 1px solid black;
-    z-index: 100;
-    overflow-y: hidden;
-}
-.p_title{
-    background-color: rgb(229, 226, 226);
-    border-radius: 5px 5px 0 0;
-    height: 25px;
-    color: rgb(66, 65, 65);
-}
-.price{
-    background-color: black;
-    color: white;
-    border-radius: 0 0 5px 5px;
-    height: 25px;
 }
 
-.C{
-    position: absolute;
-    top: 0;
-    right: 12px;
-    width: 220px;
-    height: 100%;
-    border-left: 2px solid cadetblue;
-    scroll-behavior: smooth;
-    overflow: scroll;
-    overflow-x: hidden;
+.box-addClothes-header,
+.box-showClothes-header {
+    margin-top: 7px;
+    height: 25px;
+    width: 100px;
+    line-height: 25px;
+    font-weight: bold;
+    /* background-color: rgb(30, 144, 255); */
 }
-.select{
-    width: 100%;
-    height: 40px;
-    padding: 8px;
-    border-bottom: 1px solid #ccc;
+
+.box-showClothes-header {
+    display: block;
+    margin: 7px auto 0;
+    text-align: center;
 }
-.select select{
-    width: 80px;
+
+
+.show-clothesData {
+    /* background-color: skyblue; */
+    display: inline-block;
+    margin: 3px 5px 0;
+    width: 230px;
+    text-align: center;
 }
-.items{
-	overflow-y:auto;
+
+.cloth-input {
+    border: 0;
+    height: 20px;
+    width: 130px;
+    border-bottom: solid 2px rgb(219, 228, 238);
+    background-color: transparent;
+    vertical-align: bottom;
 }
-.item{
-    display: flex;
-    flex-direction: column;
-    background-color: #ccc;
+
+.box-setClothesData {
+    margin-top: 10px;
 }
-.cloth{
-    position: relative;
-    width: 100%;
-    height: 300px;
+
+.cloth-gender,
+.cloth-sort {
+    width: 130px;
+    vertical-align: bottom;
 }
-.addCloth{
-    position: absolute;
-    top: 0;
-    right: 0;
+
+.box-clothManage-btn {
+    height: 35px;
+    line-height: 35px;
+    margin: 20px 5px 0px;
+    /* background-color: peru; */
+    text-align: right;
+}
+
+.clothManage-btn {
     width: 50px;
-    z-index: 50;
-}
-.specific_cloth{
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    width: 150px;
-}
-.attribute{
-    position: relative;
-    top: -20px;
-    padding: 0 auto;
-    width: 100%;
-    height: 80px;
-
-}
-.attribute div{
-    margin: 3px 0;
-    padding: 0 0 0 20px;
 }
 
+.box-showClothes {
+    display: inline-block;
+    width: 409px;
+    height: 272px;
+    background-color: #37cee9;
+    margin: 0 20px 20px 0;
+}
+
+.box-clothImg {
+    display: inline-block;
+    width: 164px;
+    height: 150px;
+    /* background-color: beige; */
+    vertical-align: top;
+}
+
+.heard-clothImg {
+    text-align: center;
+    color: rgb(219, 228, 238);
+    height: 25px;
+    line-height: 25px;
+    margin-top: 10px;
+}
+
+.heard-clothImg:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.img-cloth {
+    height: 115px;
+    text-align: center;
+    /* background-color: blueviolet; */
+}
+
+.img-cloth img {
+    height: 100%;
+}
+
+.box-addClothes,
+.box-addClothes-header {
+    display: inline-block;
+    vertical-align: top; /* 或者使用 middle，根据需求选择对齐方式 */
+}
+
+
+/* #endregion服饰管理页面start */
 

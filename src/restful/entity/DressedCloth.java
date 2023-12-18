@@ -23,7 +23,7 @@ public class DressedCloth {
     private int id;
     private String clothID;
     private String clothName;
-    private double clothPrice;
+    private String clothPrice;
     private String clothGender;
     private String clothCategoryName;
     private String clothImageName;
@@ -68,11 +68,11 @@ public class DressedCloth {
 		this.clothName = clothName;
 	}
 	
-	public double getClothPrice() {
+	public String getClothPrice() {
 		return clothPrice;
 	}
 	
-	public void setClothPrice(double clothPrice) {
+	public void setClothPrice(String clothPrice) {
 		this.clothPrice = clothPrice;
 	}
 	

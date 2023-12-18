@@ -206,9 +206,14 @@ function selfFunctionB(userT = null) {
     // var user = JSON.parse(sessionStorage.getItem('loggedInUser'));
 
 
-    var userFormContainer = $('.info_form');
-    // 使用jQuery的css()方法更改样式  
-    userFormContainer.css('display', 'block');
+    // var userFormContainer = $('.info_form');
+    // 使用jQuery的css()方法更改样式
+    // userFormContainer.css('display', 'block');
+    //隐藏其他页面（可添加多个）
+    $('.box-clothes').css('display', 'none');
+    //切换显示/隐藏
+    $('.info_form').toggle();
+
     // 使用jQuery的$.parseJSON()方法解析sessionStorage中的用户信息  
     if (userT) {
         var user = $.parseJSON(userT);
@@ -660,8 +665,6 @@ function getAllclothes() {
         success: function (data) {
             console.log(data);
             // 更新服饰页面数据
-            // ... （以下代码省略，与原代码相同）
- //             // 更新服饰页面数据
             var clothesBox = $('#box-clothes');
             clothesBox.empty(); // 清空界面
             var row = $('<div>').addClass('clothes').attr('id', 'add-clothes').appendTo(clothesBox);
@@ -728,328 +731,460 @@ function delClothes(cloth) {
         // 如果用户点击了"取消"，则不执行任何操作  
         return;
     }
-
     $.ajax({
-        url: 'http://127.0.0.1:8080/suit/clothCategory/remove',
+        url: 'http://127.0.0.1:8080/suit/clothCategory/getSingleClothCategory',
         type: 'POST',
-        data: JSON.stringify(cloth),
-        dataType: 'json',
+        data: JSON.stringify({ clothCategoryID: clothCategoryID }),
         contentType: 'application/json',
+        dataType: 'json',
         success: function (data) {
-            // 如果删除成功，更新表格  
-            console.log(data);
-            getAllclothes();
+            if (data.code === 0) {
+                // 获取用户信息
+                var aCloth = data.data;
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/suit/clothCategory/remove',
+                    type: 'POST',
+                    data: JSON.stringify(aCloth),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        // 如果删除成功，更新表格  
+                        getAllclothes();
+                        // 显示后端返回的消息
+                        alert(data.description);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert('删除服饰信息时出错');
+                    }
+                });
+            } else {
+                alert(data.description);
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+            alert('获取用户信息时出错');
+        }
+    });
+}
+
+
+// 服饰管理页面——导航条
+function setClothesManage() {
+   
+    var user = JSON.parse(sessionStorage.getItem('loggedInUser'));
+    console.log(user);
+    if (user.identity != 1) {
+        alert('您不是管理员，无法获取用户数据。');
+        return;
+    }
+    //隐藏其他页面（可添加多个）
+    $('.box-user_table').css('display', 'none');
+    $('.box-clothes').css('display', 'none');
+    $('.info_form').css('display', 'none');
+    //显示隐藏表格
+    $('.box-clothes-manage').toggle();
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/clothCategory/getAll',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data.data[0].clothCategoryName);
+            console.log("!!!!!!!!!!!!!!!!!!!!!!");
+            
+            console.log(data.data);
+            searchSetClothes('male', data.data[0].clothCategoryName, data.data);
         },
         error: function (error) {
             console.log(error);
-            alert('删除服饰信息时出错');
-        }
-    });
-
-}
-
-// 虚拟着装界面
-function suitManage(){
-    if ($('.content').css('opacity') == 1) {  
-        // 如果.content是可见的，那么隐藏它  
-        $('.content').css('opacity', 0);  
-    } else {  
-        // 如果.content是不可见的，那么显示它  
-        $('.content').css('opacity', 1);  
-    }  
-}
-
-//初始化页面
-$(function(){
-    upload_ClothSpecies();
-    build_model_original_cloth();
-})
-
-//初始化衣服种类
-function upload_ClothSpecies(){
-    var user = JSON.parse(sessionStorage.getItem('loggedInUser'));
-    let select = $("<select></select>");
-    $.ajax({
-        url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",  
-        type:"post",
-        data: JSON.stringify({"name": user.name}),
-        contentType: "application/json",  
-        success:function(result){
-            console.log("初始化衣服种类获取成功！");
-            console.log(result);
-            for(var i = 0;i<result.data.length;i++){
-                //如果是最上面的(此时没有选择任何种类)，直接显示该种类的全部服饰
-                if(i == 0){
-                    upload_cloth_classification(result.data[i].clothID);
-                }
-                var option = $("<option></option>").append(result.data[i].name).val(result.data[i].clothID);
-                select.append(option);
-            }
-        }
-    });
-    select.appendTo(".select");
-    //当用户改变种类时，需要更新衣服
-    select.change(function(){
-        console.log($(this).val());
-        upload_cloth_classification($(this).val());
-        //upload_cloth_classification($(this).find("option:selected").val());
-    });
-}
-
-//根据种类显示所有对应的衣服放到区域C
-function upload_cloth_classification(clothCategoryName){
-    var user = JSON.parse(sessionStorage.getItem('loggedInUser'));
-    $(".C > div").not(":first").remove();
-    var cloth = {};
-    cloth.clothCategoryName = clothCategoryName;
-    $.ajax({
-        url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",  
-        type:"post",
-        contentType: "application/json",
-        data:JSON.stringify(cloth),
-        success:function(result){
-            //遍历构建表单
-            $.each(result.data,function(item){
-                var addImg = $("<img class='addCloth'></img>").attr("src","../images/ui/add.png");
-                var clothImg = $("<img class='specific_cloth'></img>").attr("src","../images/data/suits/"+item.clothImageName);
-                var clothDiv = $("<div></div>").addClass("cloth").append(addImg).append(clothImg);
-                
-                var numberSpan1 = $("<span></span>").append("编号：");
-                var numberSpan2 = $("<span></span>").append(item.clothID);
-                var numberDiv = $("<div></div>").append(numberSpan1).append(numberSpan2);
-                var nameSpan1 = $("<span></span>").append("名称：");
-                var nameSpan2 = $("<span></span>").append(item.clothName);
-                var nameDiv = $("<div></div>").append(nameSpan1).append(nameSpan2);
-                var priceSpan1 = $("<span></span>").append("价格：");
-                var priceSpan2 = $("<span></span>").append("￥"+item.clothPrice);
-                var priceDiv = $("<div></div>").append(priceSpan1).append(priceSpan2);
-                var attributeDiv = $("<div></div>").addClass("attribute").append(numberDiv).append(nameDiv).append(priceDiv);
-                
-                var itemDiv = $("<div></div>").append(clothDiv).append(attributeDiv).appendTo(".C");
-                //添加饰品
-                addImg.click(function(){
-                    build_form(0,item.clothID,item.clothName,item.clothPrice,0,true);
-                    build_cloth(item.clothID,item.clothImageName,item.clothCategoryName,0);
-                });
-            });
         }
     });
 }
 
-// 初始化人物模型以及饰品，区域B
-function build_model_original_cloth(){
-    // 初始化人物模型 
-    //var model = "${sessionScope.user.model}";
-    let temp=window.sessionStorage.getItem("loggedInUser");
-    var model=JSON.parse(temp).modelID;
-    //var model="wheadA";
-    var modelImg = $("<img class='model'></img>").attr("src","../images/data/model/"+model+"Model.png").appendTo(".model-box");
+
+
+function searchSetClothes(clothGender, clothCategoryName, allClothesData = null) {
+    console.log(clothGender);
+    //获取服饰类别
     
-    // 初始化装扮表单 
-    var dress = {};
-    //dress.username = "${sessionScope.user.username}";
-    dress['name'] =JSON.parse(temp).name;
-    $.ajax({
-        url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",
-        type:"post",
-        contentType: "application/json",
-        data:JSON.stringify(dress),
-        success:function(result){
-            //遍历构建表单
-            console.log("初始化装扮表单6666666");
-            console.log(result);
-            $.each(result.data,function(index,item){
-                var id = item.id;
-                //var clothnumber = item.clothnumber;
-                var clothnumber = item.clothID;
-                var index = item.cindex;
-                
-                var cloth = {};
-                cloth.clothID = item.clothID;
-                $.ajax({
-                    url:"http://127.0.0.1:8080/suit/dressedClothes/getClothList",
-                    type:"post",
-                    contentType: "application/json",
-                    data:JSON.stringify(cloth),
-                    success:function(result){
-                        build_form(id,clothnumber,result.data[0].name,result.data[0].price,index,false);
-                        build_cloth(result.data[0].clothID,result.data[0].clothImageName,result.data[0].clothCategoryName,index);
-                    }
-                });
-            });
-        }
+
+    var selectData = $('#select-clothes');
+    selectData.empty(); // 清空界面
+
+
+    allClothesData.forEach(function (cloth, index) {
+        // $('<option>').val(cloth.clothCategoryName).appendTo(selectData).text(cloth.clothCategoryName);
+        selectData.append($('<option>').val(cloth.clothCategoryName).text(cloth.clothCategoryName));
+        console.log('Cloth ' + index + ': ' + JSON.stringify(cloth));
     });
-}
- 
-// 将所有的饰品放到模特身上
-function build_cloth(clothID,clothImageName,clothCategoryName,zindex){
-    var img = $("<img></img>").attr("src","../images/data/suits/"+clothImageName)
-        .addClass(clothCategoryName)
-        .attr("id",clothID)
-        .appendTo(".model-box");
-    img.css("z-index",zindex);
-}
 
-//将模特身上的所有饰品显示在区域A
-function build_form(id,clothID,name,price,zindex,isadd){
-    console.log(name)
-     var number1 = $("<span></span>").append("编号：");
-     var number2 = $("<span></span>").append(clothID);
-     var numberDiv = $("<div></div>").append(number1).append(number2);
+    $('#select-clothes').val(clothCategoryName);
+    $('#select-gender').val(clothGender);
+    
 
-     var nameSpan1 = $("<span></span>").append("名称：");
-     var nameSpan2 = $("<span></span>").append(name);
-     var nameDiv = $("<div></div>").append(nameSpan1).append(nameSpan2);
+    // 更新服饰页面数据
+    var itemChothBox = $('.content-clothes');
+    // var setClothBox = $('.clothes-navbar');
+    itemChothBox.empty(); // 清空界面
+   
 
-     var priceSpan1 = $("<span></span>").append("价格：");
-     var priceSpan2 = $("<span></span>").append("￥"+price).addClass("dress_price");
-     var priceDiv = $("<div></div>").append(priceSpan1).append(priceSpan2);
 
-     var topDiv = $("<div></div>").addClass("top").append(numberDiv).append(nameDiv).append(priceDiv);
+     // 加载添加界面
+     var addClothitemBox = $('<div>').addClass('box-addClothes').appendTo(itemChothBox);
+     addClothitemBox.append($('<span>').addClass('box-addClothes-header').text('服饰细目'));
+     var showClothesData = $('<div>').addClass('show-clothesData').appendTo(addClothitemBox);
 
-     var zIndexImg = $("<img></img>").attr("src","../images/ui/zIndex.png");
-     var span = $("<span></span>").addClass("z-index").append(zindex);
-     var upImg = $("<img></img>").attr("src","../images/ui/up.png").addClass("up");
-     var downImg = $("<img></img>").attr("src","../images/ui/down.png").addClass("down");
-     var removeImg = $("<img></img>").attr("src","../images/ui/remove.png").addClass("remove");
-
-     var bottomDiv = $("<div></div>").addClass("bottom")
-         .append(zIndexImg).append(span).append(upImg).append(downImg).append(removeImg);
-     var form = $("<form></form>").append(topDiv).append(bottomDiv).appendTo(".A");
+     var boxSetClothesData1 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+     $('<span>').appendTo(boxSetClothesData1).text('编号：');
+     $('<input>').attr('type', 'text').attr('name', 'cloth-ref').addClass('cloth-input').appendTo(boxSetClothesData1);
      
-     var dress = {};
-     dress.id = id;
-     //dress['username'] =JSON.parse(temp).username;
-     let temp=window.sessionStorage.getItem("loggedInUser");
-     dress.name=JSON.parse(temp).name;
-     dress.clothID = clothID;
-     dress.cindex = zindex;
-     calculate_price(price);
-     if(isadd){
-        //向数据库中添加该饰品
-         $.ajax({
-            url:"http://127.0.0.1:8080/suit/dressedClothes/add",
-            type:"post",
-            contentType: "application/json", 
-            data:JSON.stringify(dress),
-            success:function(result){
-                dress.id = result.data.id;
-            }
-         });
-     }
-     /*增加z-index*/
-     upImg.click(function(){
-        var index = $(this).siblings(".z-index").text();
-         index++;
-           $(this).siblings(".z-index").text(index);
-             dress.cindex = index;
-           $.ajax({
-               url:"http://127.0.0.1:8080/suit/dressedClothes/update",
-               type:"post",
-               contentType: "application/json", 
-               data:JSON.stringify(dress),
-               success:function(){
-                   change_dress_index(clothID,index);
-                   
-               }
-         })
-     })
-     //减少z-index
-     downImg.click(function(){
-        var index = $(this).siblings(".z-index").text();
-        index--;
-        $(this).siblings(".z-index").text(index);
-             dress.cindex = index;
-           $.ajax({
-               url:"http://127.0.0.1:8080/suit/dressedClothes/update",
-               type:"post",
-               contentType: "application/json", 
-               data:JSON.stringify(dress),
-               success:function(result){	
-                   change_dress_index(clothID,index);
-                   
-               }
-         })
-     })
+     var boxSetClothesData2 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+     $('<span>').appendTo(boxSetClothesData2).text('名称：');
+     $('<input>').attr('type','text').attr('name','cloth-name').addClass('cloth-input').appendTo(boxSetClothesData2);
+
+     var boxSetClothesData3 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+     $('<span>').appendTo(boxSetClothesData3).text('价格：');
+     $('<input>').attr('type','text').attr('name','cloth-price').addClass('cloth-input').appendTo(boxSetClothesData3);
+
+     var boxSetClothesData4 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+     $('<span>').appendTo(boxSetClothesData4).text('性别：');
+     var clothGenderT = $('<select>').attr('name','cloth-gender').addClass('cloth-gender').appendTo(boxSetClothesData4);
+     $('<option>').attr('value', 'male').text('男').appendTo(clothGenderT);
+     $('<option>').attr('value', 'female').text('女').appendTo(clothGenderT);
      
-     //删除该衣服
-     removeImg.click(function(){
-         $(this).parents("form").remove();
-         $.ajax({
-            url:"http://127.0.0.1:8080/suit/dressedClothes/remove",  
-            type:"post",
-            contentType: "application/json",  
-               data:JSON.stringify(dress),
-               success:function(result){
-                   remove_clothImg(clothID);
-                   calculate_price(-price);
-               }
-         });
+     var boxSetClothesData5 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+     $('<span>').appendTo(boxSetClothesData5).text('分类：');
+     var clothSort = $('<select>').attr('name','cloth-sort').addClass('cloth-sort').appendTo(boxSetClothesData5);
+     allClothesData.forEach(function (cloth, index) {
+        clothSort.append($('<option>').val(cloth.clothCategoryName).text(cloth.clothCategoryName));
+        console.log('Cloth ' + index + ': ' + JSON.stringify(cloth));
      });
-}
-  
-//计算当前的总值
-function calculate_price(price){
-    var oldprice = parseInt($(".price").text().substring(1));
-    $(".price").text("￥"+(Number(oldprice)+Number(price)));
-}
 
-// 改变饰品层级 
-function change_dress_index(id,index){
-    $('#'+id).css("z-index",index);
-}
-
-// 删除服饰图片 
-function remove_clothImg(id){
-    $('#'+id).remove();
-}
-
-function update_model_dress(){
-    // 初始化人物模型 
-    let temp=window.sessionStorage.getItem("loggedInUser");
-    var model=JSON.parse(temp).modelID;
-    console.log(model)
-    var modelImg = $("<img class='model'></img>").attr("src","../images/data/model/"+model+"Model.png").appendTo(".model-box");
-    
-    // 初始化装扮表单 
-    var dress = {};
-    dress['name'] =JSON.parse(temp).name;
+     var boxClothManageBtn = $('<div>').appendTo(addClothitemBox).addClass('box-clothManage-btn');
+     $('<button>').attr('id','clothManageAdd-btn').attr('onclick','addTheClothes()').addClass('clothManage-btn').appendTo(boxClothManageBtn).text('添加');
     $.ajax({
-        url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",
-        type:"post",
-        contentType: "application/json",
-        data:JSON.stringify(dress),
-        success:function(result){
-            //遍历构建表单
-            console.log(result)
-            $.each(result.data,function(index,item){
-                var id = item.id;
-                //var clothnumber = item.clothnumber;
-                var clothnumber = item.clothID;
-                var index = item.cindex;
+        url: 'http://127.0.0.1:8080/suit/cloth/search',
+        type: 'POST',
+        data: JSON.stringify({
+            clothGender: clothGender,
+            clothCategoryName:clothCategoryName
+        }),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            // 加载服饰主页面
+
+            //服饰细目展示
+            data.data.forEach(function (item, index) {
+
+                var showClothitemBox = $('<div>').addClass('box-showClothes').attr('id',item.id).appendTo(itemChothBox);
+                showClothitemBox.append($('<span>').addClass('box-showClothes-header').text('服饰细目'));
+                var showClothesData = $('<div>').addClass('show-clothesData').appendTo(showClothitemBox);
+                var boxSetClothesData1 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+                $('<span>').appendTo(boxSetClothesData1).text('编号：');
+                $('<input>').attr('type', 'text').attr('name', 'cloth-ref').addClass('cloth-input').attr('value','' + item.clothID).appendTo(boxSetClothesData1);
                 
-                var cloth = {};
-                cloth.clothID = item.clothID;
-                $.ajax({
-                    url:"http://127.0.0.1:8080/suit/dressedClothes/getClothList",
-                    type:"post",
-                    contentType: "application/json",
-                    data:JSON.stringify(cloth),
-                    success:function(result){
-                        build_cloth(result.data[0].clothID,result.data[0].clothImageName,result.data[0].clothCategoryName,index);
-                    }
+                var boxSetClothesData2 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+                $('<span>').appendTo(boxSetClothesData2).text('名称：');
+                $('<input>').attr('type','text').attr('name','cloth-name').addClass('cloth-input').attr('value','' + item.clothName).appendTo(boxSetClothesData2);
+
+                var boxSetClothesData3 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+                $('<span>').appendTo(boxSetClothesData3).text('价格：');
+                $('<input>').attr('type','text').attr('name','cloth-price').addClass('cloth-input').attr('value','' + item.clothPrice).appendTo(boxSetClothesData3);
+
+                var boxSetClothesData4 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+                $('<span>').appendTo(boxSetClothesData4).text('性别：');
+                var clothGenderT = $('<select>').attr('name','cloth-gender').addClass('cloth-gender').appendTo(boxSetClothesData4);
+                $('<option>').attr('value', 'male').text('男').appendTo(clothGenderT);
+                $('<option>').attr('value', 'female').text('女').appendTo(clothGenderT);
+                clothGenderT.val(item.clothGender);
+                
+                var boxSetClothesData5 = $('<div>').addClass('box-setClothesData').appendTo(showClothesData);
+                $('<span>').appendTo(boxSetClothesData5).text('分类：');
+                var clothSort = $('<select>').attr('name','cloth-sort').addClass('cloth-sort').val(item.clothCategoryName).appendTo(boxSetClothesData5);
+                allClothesData.forEach(function (cloth, index) {
+                    clothSort.append($('<option>').text(cloth.clothCategoryName));
+                    console.log('Cloth ' + index + ': ' + JSON.stringify(cloth));
+
                 });
-            });
+                clothSort.val(item.clothCategoryName);
+
+                //插入图片
+                var showClothesDImg = $('<div>').addClass('box-clothImg').appendTo(showClothitemBox);
+                $('<input>').attr('type','file').attr('id','fileInput'+item.id).attr('accept','image/*').css({'display': 'none'}).appendTo(showClothesDImg);
+                $('<div>').attr('id','fileInputText'+item.id).addClass('heard-clothImg').appendTo(showClothesDImg).text('点击添加图片').attr('onclick','addTheClothesImg(' + "'" + item.clothID + "'" + ')');
+                var imgCloth = $('<div>').addClass('img-cloth').appendTo(showClothesDImg);
+                $('<img>').attr('id','thisClothImg'+item.id).attr('src','../images/data/suits/' + item.clothImageName).attr('data-name','cltPic').attr('data-value', '' + item.clothImageName).appendTo(imgCloth);
+
+
+                var boxClothManageBtn = $('<div>').addClass('box-clothManage-btn').appendTo(showClothitemBox);
+                
+                $('<button>').addClass('clothManage-btn').attr('onclick', 'saveTheClothes(' + "'" + item.id + "'" + ')').appendTo(boxClothManageBtn).text('保存');
+                $('<button>').addClass('clothManage-btn').attr('onclick', 'delTheClothes(' + "'" + item.clothID + "'" + ')').appendTo(boxClothManageBtn).text('删除');
+                console.log('Cloth ' + index + ': ' + JSON.stringify(item));       
+                });
+        },
+        error: function (error) {
+            console.log(error);
         }
     });
 }
 
-// 退出
-function logout(){
-    var result = confirm("您确定退出吗？");
+
+//查询按钮
+$(document).ready(function () {
+    $('#btn-clothes-navbar').on('click', function () {
+            searchTheClothes();
+    });
+});
+
+function searchTheClothes() {
+    var clothGender = $('#select-gender').val();
+    var clothCategoryName = $('#select-clothes').val();
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/clothCategory/getAll',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+            searchSetClothes(clothGender, clothCategoryName, data.data);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+// 添加按钮
+// $(document).ready(function () {
+//     $('#clothManageAdd-btn').on('click', function () {
+//         console.log('bangdingshijian!!!!');
+//         addTheClothes();
+//     });
+// });
+
+function addTheClothes() {
+    
+    // 从页面中获取用户输入的服饰编号和名称
+    var clothID = $('.show-clothesData .box-setClothesData:nth-of-type(1) input').val();
+    var clothName = $('.box-addClothes .show-clothesData .box-setClothesData:nth-of-type(2) input').val();
+    var clothPrice = $('.box-addClothes .show-clothesData .box-setClothesData:nth-of-type(3) input').val();
+    var clothGender = $('.box-addClothes .show-clothesData .box-setClothesData:nth-of-type(4) select').val();
+    var clothCategoryName = $('.box-addClothes .show-clothesData .box-setClothesData:nth-of-type(5) select').val();
+
+
+
+    // 构造用户修改后的信息对象  
+    var addTheCloth = {
+        clothID: clothID,
+        clothName: clothName,
+        clothPrice: clothPrice,
+        clothGender: clothGender,
+        clothCategoryName: clothCategoryName,
+        clothImageName: 'default.png'
+        // 可根据需要添加其他字段  
+    };
+
+    // 如果输入都不为空 
+    if (clothID && clothName && clothID && clothGender && clothCategoryName) {
+        // 提交数据到后端，并在提交完成后执行获取所有服饰信息
+        submitSetClothesData(addTheCloth, searchTheClothes);
+    } else {
+        alert('输入信息不完整！请重新输入')
+    }
+}
+
+function submitSetClothesData(addTheCloth, callback) {
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/cloth/add',
+        type: 'POST',
+        data: JSON.stringify(addTheCloth),
+        contentType: 'application/json',
+    })
+        .done(function (response) {
+            // 处理后端返回的结果
+            if (response.code === 0) {
+                // 调用传入的回调函数
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+            // 显示后端返回的消息
+            alert(response.description);
+        })
+        .fail(function (errorThrown) {
+            console.error('Error:', errorThrown);
+            alert('提交信息过程中发生错误，请重试。');
+        });
+}
+
+// 保存按钮
+// $(document).ready(function () {
+//     $('.box-clothManage-btn button:nth-of-type(1)').on('click', function () {
+//             saveTheClothes();
+//     });
+// });
+
+function saveTheClothes(id) {
+    // 从页面中获取用户输入的服饰编号和名称
+    var clothID = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(1) input').val();
+    var clothName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(2) input').val();
+    var clothPrice = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(3) input').val();
+    var clothGender = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(4) select').val();
+    var clothCategoryName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(5) select').val();
+    var clothImageName = $('#' + id +' .box-clothImg .img-cloth img').data('value');
+    console.log('保存时的图片名称是' + clothImageName);
+    
+    
+    
+    // 构造用户修改后的信息对象  
+     var saveTheCloth = {
+        id: id,
+        clothID: clothID,
+        clothName: clothName,
+        clothPrice: clothPrice,
+        clothGender: clothGender,
+        clothCategoryName: clothCategoryName,
+        clothImageName: clothImageName,
+        // 可根据需要添加其他字段  
+    };
+
+        // 如果输入都不为空 
+        if (clothID && clothName && clothID && clothGender && clothCategoryName) {
+            // 提交数据到后端，并在提交完成后执行获取所有服饰信息
+            submitSaveClothesData(saveTheCloth, searchTheClothes);
+        } else {
+            alert('输入信息不完整！请重新输入');
+        }
+}
+
+function submitSaveClothesData(saveTheCloth, callback) {
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/cloth/update',
+        type: 'POST',
+        data: JSON.stringify(saveTheCloth),
+        contentType: 'application/json',
+    })
+        .done(function (response) {
+            // 处理后端返回的结果
+            if (response.code === 0) {
+                // 调用传入的回调函数
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+            // 显示后端返回的消息
+            alert(response.description);
+        })
+        .fail(function (errorThrown) {
+            console.error('Error:', errorThrown);
+            alert('提交信息过程中发生错误，请重试。');
+        });
+}
+
+
+// 删除按钮
+function delTheClothes(clothID) {
+    var result = confirm("您确认要删除编号为" + clothID + " 的信息吗?");
     if (!result) {
         // 如果用户点击了"取消"，则不执行任何操作  
         return;
     }
-    window.location.href = 'login.html';  
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/cloth/getSingle',
+        type: 'POST',
+        data: JSON.stringify({ clothID: clothID }),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            if (data.code === 0) {
+                // 获取用户信息
+                var aDelCloth = data.data;
+                $.ajax({
+                    url: 'http://127.0.0.1:8080/suit/cloth/remove',
+                    type: 'POST',
+                    data: JSON.stringify(aDelCloth),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        // 如果删除成功，更新表格  
+                        searchTheClothes();
+                        // 显示后端返回的消息
+                        alert(data.description);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        alert('删除服饰信息时出错');
+                    }
+                });
+            } else {
+                alert(data.description);
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+            alert('获取用户信息时出错');
+        }
+    });
+}
+
+//添加图片
+
+
+function addTheClothesImg(clothID) {
+    $.ajax({
+        url: 'http://127.0.0.1:8080/suit/cloth/getSingle',
+        type: 'POST',
+        data: JSON.stringify({ clothID: clothID }),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            if (data.code === 0) {
+                // 获取用户信息
+                var aClothImg = data.data;
+                // $(document).ready(function () {
+                    // $('#fileInputText'+aClothImg.id).on('click', function () {
+                        // 触发文件选择
+                $('#fileInput'+aClothImg.id).click();
+                    // });
+            
+                    // 文件输入框变化事件
+                $('#fileInput'+aClothImg.id).on('change', function () {
+                      var fileInput = this;
+                      var file = fileInput.files[0];
+            
+                       if (file) {
+                            var formData = new FormData();
+                            formData.append('image', file);
+                            formData.append('id', aClothImg.id);
+            
+                            $.ajax({
+                                url: 'http://127.0.0.1:8080/suit/cloth/uploadClothImage', // 替换成实际的上传接口
+                                type: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function (data) {
+                                    // 上传成功的处理逻辑
+                                    $('#thisClothImg'+aClothImg.id).attr('src', '../images/data/suits/' + data.data).attr('data-value', '' + data.data);
+                                    console.log('上传成功后把clothImageName修改为' + data.data);
+                                    alert(data.description);
+                                },
+                                error: function (data) {
+                                    // 上传失败的处理逻辑
+                                    alert(data.description);
+                                }
+                            });
+                        }
+                    });
+                
+            } else {
+                alert(data.description);
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+            alert('获取用户信息时出错');
+        }
+    });
 }

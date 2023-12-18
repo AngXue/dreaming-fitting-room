@@ -36,7 +36,7 @@
                     </button>
                 </li>
                 <li>
-                    <button onclick="myFunction()">
+                    <button onclick="setClothesManage()">
                         <img src="../images/ui/home_service_ui_norm.png">
                     </button>
                 </li>
@@ -128,26 +128,26 @@
             <div class="box-clothes" id="box-clothes">
             </div>
 
-            <!-- 虚拟着装界面 -->
-            <div class="container">   
-                   <div class="content">
-                    <div class="A"></div>
-                    <div class="B">
-                        <div class="model-box"></div>
-                        <img id="modelShadow" src="../images/data/model/modelShadow.png" />
-                        <img id="ground" src="../images/ui/ground.png"/>
-                        <div class="price-box">
-                            <p class="p_title">总价</p>
-                            <p class="price">￥0</p>
-                        </div>
-                    </div>
-                    <div class="C">
-                        <div class="select">
-                            <span>选择分类：</span>
-                        </div>
-                    </div>
+            <!-- 服饰管理页面 -->
+            <div class="box-clothes-manage">
+                <!-- 导航条 -->
+                <div class="clothes-navbar">
+                    <span>性别：</span>
+                    <select name="select-gender" id="select-gender">
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                    <span>服饰类别：</span>
+                    <select name="select-clothes" id="select-clothes">
+                    </select>
+                    <button id="btn-clothes-navbar">查询</button>
+                </div>
+                <!-- 服饰主页面 -->
+                <div class="content-clothes">
+
                 </div>
             </div>
+
         </div>
     </div>
 </body>

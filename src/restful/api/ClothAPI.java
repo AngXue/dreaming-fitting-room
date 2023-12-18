@@ -3,6 +3,7 @@ package restful.api;
 import java.io.File;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -12,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -21,6 +23,9 @@ import restful.entity.Cloth;
 
 @Path("/cloth")
 public class ClothAPI{
+	
+	@Context
+	private ServletContext context;
 
 	@POST
     @Path("/add")
@@ -83,42 +88,73 @@ public class ClothAPI{
         return new Result(0, "查询成功", clothes, "");
     }
     
-    @POST  
-    @Path("/uploadImage")  
+    @POST
+    @Path("/getSingle")
+	@Consumes("application/json;charset=UTF-8")
+    @Produces("application/json;charset=UTF-8")
+    public Result getSingleCloth(Cloth cloth) {
+    	Cloth result = EM.getEntityManager()
+				.createNamedQuery("Cloth.findByClothID", Cloth.class)
+				.setParameter("clothID", cloth.getClothID())
+				.getSingleResult();
+       
+        return new Result(0, "查询成功", result, "");
+    }
+    
+    @POST
+    @Path("/uploadClothImage")
     @Produces("application/json;charset=UTF-8") 
-    public Result uploadImage(@Context HttpServletRequest request, @QueryParam("code") String suitCode) { 
-        // code为服装编号
-        // 创建DiskFileItem工厂  
-    	DiskFileItemFactory factory = new DiskFileItemFactory();
-        // 创建文件上传解析对象  
-    	ServletFileUpload upload = new ServletFileUpload(factory);
-        // 按照UTF-8编码格式读取
-        upload.setHeaderEncoding("UTF-8");  
-        // 设置每个文件最大为5M  
-        upload.setFileSizeMax(5120*1024); // 5M
-        // 一共最多能上传10M  
-        upload.setSizeMax(10240*1024); // 10M
-        // 获取文件保存目录  
-        String savePath = "../../../../WebContent/images/data/suits/";
+    public Result uploadImage(@Context HttpServletRequest request) {
+        // 文件上传设置
+    	String realPath = context.getRealPath("/");
+        String UPLOAD_DIRECTORY = realPath + "images/data/suits/";
+        int MAX_FILE_SIZE = 5120 * 1024; // 5MB
+        int MAX_REQUEST_SIZE = 10240 * 1024; // 10MB
+        String fileName = null;
+        String id = null;
 
-        try {  
-            // 解析并保存  
-            List<FileItem> fileItems = upload.parseRequest(request);
-            for (FileItem fileItem : fileItems) {
-                // 取原文件后缀和suitCode拼接成新文件名
-                String fileName = fileItem.getName();
-                fileName = suitCode + fileName.substring(fileName.lastIndexOf("."));
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
+        upload.setHeaderEncoding("UTF-8");
+
+        try {
+            List<FileItem> formItems = upload.parseRequest(request);
+            FileItem imageFileItem = null;
+
+            for (FileItem item : formItems) {
+                if (item.isFormField() && "id".equals(item.getFieldName())) {
+                    id = item.getString("UTF-8");
+                    System.out.println("id = : " + id);
+                } else if (!item.isFormField()) {
+                    imageFileItem = item;
+                }
+            }
+
+            if (imageFileItem != null && id != null && !id.isEmpty()) {
+            	fileName = new File(imageFileItem.getName()).getName();
+                String filePath = UPLOAD_DIRECTORY + fileName;
+
+                // 如果文件已存在，删除旧文件
+                File oldFile = new File(filePath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                }
+                
                 // 保存文件
-                fileItem.write(new File(savePath + fileName));
-                // 返回结果
-                return new Result(0, fileName, "", "");  
-            }  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-            return new Result(-1, "服务器文件解析错误", "", "");  
-        }  
+                File storeFile = new File(filePath);
+                imageFileItem.write(storeFile);
 
-        return new Result(-1, "未发现可供服务保存的数据", "", "");  
-    }  
+                return new Result(0, "上传成功", fileName, ""); 
+            } else {
+            	return new Result(-1, "缺少必要的参数或文件", "", "");  
+            }
+        } catch (Exception ex) {
+        	System.out.println(ex.getMessage());
+        	return new Result(0, "上传成功", fileName, ""); 
+        }
+    }
 
 }

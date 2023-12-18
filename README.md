@@ -21,7 +21,7 @@
   - id (唯一，主键) int
   - 编号 clothID（唯一）
   - 名称 clothName
-  - 价格 clothPrice（数值型）double
+  - 价格 clothPrice（数值型）
   - 性别 clothGender（男/女）
   - 分类 clothCategoryName（服饰类别名）
   - 图片 clothImageName（图片全名，不可为空，默认路径为特定图，如default.png）
@@ -116,8 +116,13 @@
   - 前端传入: Cloth对象（需要包含clothGender, clothCategoryName）
   - 后端返回
     - 查询成功: Result(0, "查询成功", List<Cloth> clothes, "")
+- 获取单个服饰
+  - url: /cloth/getSingle
+  - 前端传入: Cloth对象（需要包含clothID）
+  - 后端返回
+    - 查询成功: Result(0, "查询成功", Cloth cloth, "")
 - 上传服饰图片
-  - url: /file/uploadClothImage
+  - url: /cloth/uploadClothImage
   - 前端传入: 图片文件
   - 后端返回
     - 接收成功: Result(0, String fileName, "", "")
