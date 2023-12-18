@@ -1,0 +1,237 @@
+/* 虚拟着装界面 */
+        
+.content{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    opacity: 0;
+    background-size: cover;
+    /* background-image: url(../images/d5.jpeg); */
+}
+
+.A{
+    display: flex;
+    justify-content:start;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    position: relative;
+    top: 30px;
+    left: 50px;
+    width: 600px;
+    height: 400px;
+    padding: 10px;
+    z-index: 50;
+}
+
+.A form{
+    position: relative;
+    padding: 7px;
+    margin: 7px;
+    width: 170px;
+    height: 130px;
+
+    animation-iteration-count: infinite;
+    color: white;
+    padding: 1.2rem;
+    margin: 2rem;
+    width: 12rem;
+    min-height: 6.6rem;
+    margin: 2rem;
+	border-radius: 15px;
+    background-image: linear-gradient( to bottom right, rgb(209 191 219), rgb(92, 163, 211) );
+}
+/* div.top{
+    display: flex;
+    flex-direction: column;
+}
+div.top div{
+    margin: 1.5px 0;
+} */
+.A form img{
+    width: 24px;
+}
+/* div .bottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 35px;
+}
+div .bottom span{
+    margin: 0 5px;
+} */
+
+.B{
+    position: relative;
+    top: 0;
+    left: 10px;
+    width: 600px;
+    height: 94vh;
+   
+}
+.model-box{
+    position: relative;
+    top: 60px;
+    left: 120px;
+    width: 250px;
+    height: 550px;
+    z-index: 100;
+    background: transparent;
+}
+
+.model{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 300px;
+    background: transparent;
+}
+
+
+.model-box .shirt,
+.model-box .outwear,
+.model-box .sweater,
+.model-box .tshirt,
+.model-box .belt,
+.model-box .jeans,
+.model-box .shoe,
+.model-box .skirt,
+.model-box .accessory,
+.model-box .bag,
+.model-box .hat,
+.model-box .suit{
+    position: absolute;
+    top: 21px;
+    left: -25px;
+    width: 300px;
+    background: transparent;
+}
+
+.model-box .shirt,
+.model-box .sweater,
+.model—box .tshirt{
+    z-index: 0;
+}
+
+.model-box .jeans{
+	z-index: 0;
+}
+
+.model-box .outwear,
+.model-box .shoe{
+    z-index: 0;
+}
+
+.model-box .belt{
+    z-index: 0;
+}
+
+.model-box .skirt{
+    z-index: 0;
+}
+
+.model-box .accessory,
+.model-box .bag,
+.model-box .hat{
+    z-index: 0;
+}
+
+#modelShadow{
+    position: absolute;
+    top: 100px;
+    left: 80px;
+    width: 270px;
+    background: transparent;
+    z-index: 50;
+}
+#ground{
+    position: absolute;
+    top: 200px;
+    left: 0;
+    width: 450px;
+    background: transparent;
+}
+.price-box{
+    position: relative;
+    top: 0;
+    left: 450px;
+    width: 90px;
+    height: 50px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid black;
+    z-index: 100;
+    overflow-y: hidden;
+}
+.p_title{
+    background-color: rgb(229, 226, 226);
+    border-radius: 5px 5px 0 0;
+    height: 25px;
+    color: rgb(66, 65, 65);
+}
+.price{
+    background-color: black;
+    color: white;
+    border-radius: 0 0 5px 5px;
+    height: 25px;
+}
+
+.C{
+    position: absolute;
+    top: 0;
+    right: 12px;
+    width: 220px;
+    height: 100%;
+    border-left: 2px solid cadetblue;
+    scroll-behavior: smooth;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.select{
+    width: 100%;
+    height: 40px;
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+}
+.select select{
+    width: 80px;
+}
+.items{
+	overflow-y:auto;
+}
+.item{
+    display: flex;
+    flex-direction: column;
+    background-color: #ccc;
+}
+.cloth{
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+.addCloth{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    z-index: 50;
+}
+.specific_cloth{
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 150px;
+}
+.attribute{
+    position: relative;
+    top: -20px;
+    padding: 0 auto;
+    width: 100%;
+    height: 80px;
+
+}
+.attribute div{
+    margin: 3px 0;
+    padding: 0 0 0 20px;
+}
