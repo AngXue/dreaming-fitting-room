@@ -147,14 +147,6 @@ public class ClothAPI{
                 File storeFile = new File(filePath);
                 imageFileItem.write(storeFile);
 
-                // 更新数据库
-                Cloth result = EM.getEntityManager().createNamedQuery("Cloth.findByID", Cloth.class)
-                		.setParameter("id", (long) Integer.parseInt(id))
-                		.getSingleResult();
-                result.setClothImageName(fileName);
-                EM.getEntityManager().merge(result);
-                EM.getEntityManager().getTransaction().commit();
-
                 return new Result(0, "上传成功", fileName, ""); 
             } else {
             	return new Result(-1, "缺少必要的参数或文件", "", "");  

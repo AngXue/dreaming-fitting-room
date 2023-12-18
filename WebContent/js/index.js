@@ -830,7 +830,7 @@ function searchSetClothes(clothGender, clothCategoryName, allClothesData = null)
                 $('<input>').attr('type','file').attr('id','fileInput'+item.id).attr('accept','image/*').css({'display': 'none'}).appendTo(showClothesDImg);
                 $('<div>').attr('id','fileInputText'+item.id).addClass('heard-clothImg').appendTo(showClothesDImg).text('点击添加图片').attr('onclick','addTheClothesImg(' + "'" + item.clothID + "'" + ')');
                 var imgCloth = $('<div>').addClass('img-cloth').appendTo(showClothesDImg);
-                $('<img>').attr('id','thisClothImg').attr('src','../images/data/suits/' + item.clothImageName).attr('data-name','cltPic').attr('data-value', '' + item.clothImageName).appendTo(imgCloth);
+                $('<img>').attr('id','thisClothImg'+item.id).attr('src','../images/data/suits/' + item.clothImageName).attr('data-name','cltPic').attr('data-value', '' + item.clothImageName).appendTo(imgCloth);
 
 
                 var boxClothManageBtn = $('<div>').addClass('box-clothManage-btn').appendTo(showClothitemBox);
@@ -941,28 +941,29 @@ function submitSetClothesData(addTheCloth, callback) {
 // });
 
 function saveTheClothes(id) {
-        // 从页面中获取用户输入的服饰编号和名称
-        var clothID = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(1) input').val();
-        var clothName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(2) input').val();
-        var clothPrice = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(3) input').val();
-        var clothGender = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(4) select').val();
-        var clothCategoryName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(5) select').val();
-        var clothImageName = $('#' + id +' .box-clothImg .img-cloth img').data('value');
+    // 从页面中获取用户输入的服饰编号和名称
+    var clothID = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(1) input').val();
+    var clothName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(2) input').val();
+    var clothPrice = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(3) input').val();
+    var clothGender = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(4) select').val();
+    var clothCategoryName = $('#' + id +' .show-clothesData .box-setClothesData:nth-of-type(5) select').val();
+    var clothImageName = $('#' + id +' .box-clothImg .img-cloth img').data('value');
+    console.log('保存时的图片名称是' + clothImageName);
     
     
     
-        // 构造用户修改后的信息对象  
-        var saveTheCloth = {
-                id: id,
-                clothID: clothID,
-                clothName: clothName,
-                clothPrice: clothPrice,
-                clothGender: clothGender,
-                clothCategoryName: clothCategoryName,
-                clothImageName: clothImageName,
-                // 可根据需要添加其他字段  
-            };
-    
+    // 构造用户修改后的信息对象  
+     var saveTheCloth = {
+        id: id,
+        clothID: clothID,
+        clothName: clothName,
+        clothPrice: clothPrice,
+        clothGender: clothGender,
+        clothCategoryName: clothCategoryName,
+        clothImageName: clothImageName,
+        // 可根据需要添加其他字段  
+    };
+
         // 如果输入都不为空 
         if (clothID && clothName && clothID && clothGender && clothCategoryName) {
             // 提交数据到后端，并在提交完成后执行获取所有服饰信息
@@ -1080,7 +1081,8 @@ function addTheClothesImg(clothID) {
                                 contentType: false,
                                 success: function (data) {
                                     // 上传成功的处理逻辑
-                                    $('#thisClothImg').attr('src', '../images/data/suits/' + data.data).attr('data-value', ''+ aClothImg.clothImageName);
+                                    $('#thisClothImg'+aClothImg.id).attr('src', '../images/data/suits/' + data.data).attr('data-value', '' + data.data);
+                                    console.log('上传成功后把clothImageName修改为' + data.data);
                                     alert(data.description);
                                 },
                                 error: function (data) {
