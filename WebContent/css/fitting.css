@@ -1,11 +1,15 @@
 /* 虚拟着装界面 */
-        
+* {
+    margin: 0;
+    padding: 0;
+}
+   
 .content{
     position: relative;
     width: 100%;
     height: 100%;
     display: flex;
-    opacity: 0;
+    /* opacity: 0; */
     background-size: cover;
     /* background-image: url(../images/d5.jpeg); */
 }

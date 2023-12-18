@@ -1186,3 +1186,13 @@ function addTheClothesImg(clothID) {
         }
     });
 }
+
+// 退出
+function logout(){
+    var result = confirm("您确定退出吗？");
+    if (!result) {
+        // 如果用户点击了"取消"，则不执行任何操作  
+        return;
+    }
+    window.location.href = 'login.html';  
+}

@@ -1,13 +1,13 @@
 // 虚拟着装界面
-function suitManage(){
-    if ($('.content').css('opacity') == 1) {  
-        // 如果.content是可见的，那么隐藏它  
-        $('.content').css('opacity', 0);  
-    } else {  
-        // 如果.content是不可见的，那么显示它  
-        $('.content').css('opacity', 1);  
-    }  
-}
+// function suitManage(){
+//     if ($('.content').css('opacity') == 1) {  
+//         // 如果.content是可见的，那么隐藏它  
+//         $('.content').css('opacity', 0);  
+//     } else {  
+//         // 如果.content是不可见的，那么显示它  
+//         $('.content').css('opacity', 1);  
+//     }  
+// }
 
 //初始化页面
 $(function(){
@@ -301,12 +301,3 @@ function update_model_dress(){
     });
 }
 
-// 退出
-function logout(){
-    var result = confirm("您确定退出吗？");
-    if (!result) {
-        // 如果用户点击了"取消"，则不执行任何操作  
-        return;
-    }
-    window.location.href = 'login.html';  
-}
