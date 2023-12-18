@@ -1081,7 +1081,7 @@ function addTheClothesImg(clothID) {
                                 success: function (data) {
                                     // 上传成功的处理逻辑
                                     alert(data.description);
-                                    $('#thisClothImg').attr('src', '../images/data/suits/' + data).attr('data-value', ''+ aClothImg.clothImageName);
+                                    $('#thisClothImg').attr('src', '../images/data/suits/' + data.data).attr('data-value', ''+ aClothImg.clothImageName);
 
                                 },
                                 error: function (data) {

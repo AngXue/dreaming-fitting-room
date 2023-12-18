@@ -12,6 +12,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -96,61 +97,64 @@ public class ClothAPI{
         return new Result(0, "查询成功", result, "");
     }
     
-    @POST  
-    @Path("/uploadClothImage")  
+    @POST
+    @Path("/uploadClothImage")
     @Produces("application/json;charset=UTF-8") 
-    public Result uploadImage(@Context HttpServletRequest request) { 
-        // 创建DiskFileItem工厂  
+    public Result uploadImage(@Context HttpServletRequest request) {
+        // 文件上传设置
+        String UPLOAD_DIRECTORY = "/WebContent/images/data/suits/";
+        int MAX_FILE_SIZE = 5120 * 1024; // 5MB
+        int MAX_REQUEST_SIZE = 10240 * 1024; // 10MB
+
         DiskFileItemFactory factory = new DiskFileItemFactory();
-        // 创建文件上传解析对象  
         ServletFileUpload upload = new ServletFileUpload(factory);
-        // 按照UTF-8编码格式读取
-        upload.setHeaderEncoding("UTF-8");  
-        // 设置每个文件最大为5M  
-        upload.setFileSizeMax(5120*1024); // 5M
-        // 一共最多能上传10M  
-        upload.setSizeMax(10240*1024); // 10M
-        // 获取文件保存目录  
-        String savePath = "../../../../WebContent/images/data/suits/";
 
-        try {  
-            // 解析并保存  
-            List<FileItem> fileItems = upload.parseRequest(request);
-            String id = null; // 用于存储从前端接收到的id
-            FileItem imageFileItem = null; // 用于存储图片文件
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
+        upload.setHeaderEncoding("UTF-8");
 
-            for (FileItem fileItem : fileItems) {
-                if (fileItem.isFormField() && "id".equals(fileItem.getFieldName())) {
-                    id = fileItem.getString("UTF-8");
-                } else if (!fileItem.isFormField()) {
-                    imageFileItem = fileItem;
+        try {
+            List<FileItem> formItems = upload.parseRequest(request);
+            String id = null;
+            FileItem imageFileItem = null;
+
+            for (FileItem item : formItems) {
+                if (item.isFormField() && "id".equals(item.getFieldName())) {
+                    id = item.getString("UTF-8");
+                } else if (!item.isFormField()) {
+                    imageFileItem = item;
                 }
             }
 
             if (imageFileItem != null && id != null && !id.isEmpty()) {
-                // 取原文件后缀和id拼接成新文件名
-                String fileName = imageFileItem.getName();
-                fileName = id + fileName.substring(fileName.lastIndexOf("."));
-                // 保存文件
-                imageFileItem.write(new File(savePath + fileName));
-                
+                String fileName = new File(imageFileItem.getName()).getName();
+                String filePath = UPLOAD_DIRECTORY + id + "_" + fileName;
+
+                File uploadDir = new File(UPLOAD_DIRECTORY);
+                if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+                	return new Result(-1, "缺少必要的参数或文件", "", "");  
+                }
+
+                File storeFile = new File(filePath);
+                imageFileItem.write(storeFile);
+
+                // 更新数据库
                 Cloth result = EM.getEntityManager().createNamedQuery("Cloth.findByID", Cloth.class)
-                		.setParameter("id", Integer.parseInt(id))
+                		.setParameter("id", (long) Integer.parseInt(id))
                 		.getSingleResult();
-                result.setClothImageName(fileName);
+                result.setClothImageName(id + "_" + fileName);
                 EM.getEntityManager().merge(result);
                 EM.getEntityManager().getTransaction().commit();
-                
-                // 返回结果
-                return new Result(0, fileName, "", "");  
-            } else {
-                return new Result(-1, "缺少必要的参数或文件", "", "");  
-            }
-        } catch (Exception e) {  
-            e.printStackTrace();  
-            return new Result(-1, "服务器文件解析错误", "", "");  
-        }  
-    }  
 
+                return new Result(0, "上传成功", id + "_" + fileName, ""); 
+            } else {
+            	return new Result(-1, "缺少必要的参数或文件", "", "");  
+            }
+        } catch (FileUploadException ex) {
+        	return new Result(-1, "缺少必要的参数或文件", "", "");  
+        } catch (Exception ex) {
+        	return new Result(-1, "服务器文件解析错误", "", "");  
+        }
+    }
 
 }

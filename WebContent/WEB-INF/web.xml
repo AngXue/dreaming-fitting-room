@@ -29,10 +29,6 @@
 		<servlet-name>Resteasy</servlet-name>
 		<url-pattern></url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-    	<servlet-name>Resteasy</servlet-name>
-    	<url-pattern>/test/*</url-pattern>
-  	</servlet-mapping>
   	<servlet-mapping>
     	<servlet-name>Resteasy</servlet-name>
     	<url-pattern>/account/*</url-pattern>
