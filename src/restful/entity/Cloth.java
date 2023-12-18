@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_Cloth")
 @NamedQueries({
+	@NamedQuery(name = "Cloth.findByID", query = "SELECT c FROM Cloth c WHERE c.id = :id"),
     @NamedQuery(name = "Cloth.findByClothID", query = "SELECT c FROM Cloth c WHERE c.clothID = :clothID"),
     @NamedQuery(name = "Cloth.findByClothName", query = "SELECT c FROM Cloth c WHERE c.clothName = :clothName"),
     @NamedQuery(name = "Cloth.findByGenderAndCategory", query = "SELECT c FROM Cloth c WHERE "
@@ -17,7 +18,7 @@ public class Cloth extends IdEntity {
 
     private String clothID;
     private String clothName;
-    private double clothPrice;
+    private String clothPrice;
     private String clothGender;
     private String clothCategoryName;
     private String clothImageName;
@@ -38,11 +39,11 @@ public class Cloth extends IdEntity {
 		this.clothName = clothName;
 	}
 	
-	public double getClothPrice() {
+	public String getClothPrice() {
 		return clothPrice;
 	}
 	
-	public void setClothPrice(double clothPrice) {
+	public void setClothPrice(String clothPrice) {
 		this.clothPrice = clothPrice;
 	}
 	

@@ -828,7 +828,7 @@ function searchSetClothes(clothGender, clothCategoryName, allClothesData = null)
                 //插入图片
                 var showClothesDImg = $('<div>').addClass('box-clothImg').appendTo(showClothitemBox);
                 $('<input>').attr('type','file').attr('id','fileInput'+item.id).attr('accept','image/*').css({'display': 'none'}).appendTo(showClothesDImg);
-                $('<div>').attr('id','fileInputText'+item.id).addClass('heard-clothImg').appendTo(showClothesDImg).text('点击添加图片');
+                $('<div>').attr('id','fileInputText'+item.id).addClass('heard-clothImg').appendTo(showClothesDImg).text('点击添加图片').attr('onclick','addTheClothesImg(' + "'" + item.clothID + "'" + ')');
                 var imgCloth = $('<div>').addClass('img-cloth').appendTo(showClothesDImg);
                 $('<img>').attr('id','thisClothImg').attr('src','../images/data/suits/' + item.clothImageName).attr('data-name','cltPic').attr('data-value', '' + item.clothImageName).appendTo(imgCloth);
 
@@ -1056,24 +1056,24 @@ function addTheClothesImg(clothID) {
             if (data.code === 0) {
                 // 获取用户信息
                 var aClothImg = data.data;
-                $(document).ready(function () {
-                    $('#fileInputText'+aClothImg.id).on('click', function () {
+                // $(document).ready(function () {
+                    // $('#fileInputText'+aClothImg.id).on('click', function () {
                         // 触发文件选择
-                        $('#fileInput'+aClothImg.id).click();
-                    });
+                $('#fileInput'+aClothImg.id).click();
+                    // });
             
                     // 文件输入框变化事件
-                    $('#fileInput').on('change', function () {
-                        var fileInput = this;
-                        var file = fileInput.files[0];
+                $('#fileInput'+aClothImg.id).on('change', function () {
+                      var fileInput = this;
+                      var file = fileInput.files[0];
             
-                        if (file) {
+                       if (file) {
                             var formData = new FormData();
                             formData.append('image', file);
-                            formData.append('id', data.id);
+                            formData.append('id', aClothImg.id);
             
                             $.ajax({
-                                url: 'http://127.0.0.1:8080/suit/file/uploadClothImage', // 替换成实际的上传接口
+                                url: 'http://127.0.0.1:8080/suit/cloth/uploadClothImage', // 替换成实际的上传接口
                                 type: 'POST',
                                 data: formData,
                                 processData: false,
@@ -1084,14 +1084,14 @@ function addTheClothesImg(clothID) {
                                     $('#thisClothImg').attr('src', '../images/data/suits/' + data).attr('data-value', ''+ aClothImg.clothImageName);
 
                                 },
-                                error: function (error) {
+                                error: function (data) {
                                     // 上传失败的处理逻辑
                                     alert(data.description);
                                 }
                             });
                         }
                     });
-                });
+                
             } else {
                 alert(data.description);
             }
@@ -1102,6 +1102,3 @@ function addTheClothesImg(clothID) {
         }
     });
 }
-
-
-// 虚拟着装界面
