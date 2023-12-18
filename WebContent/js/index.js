@@ -1080,9 +1080,8 @@ function addTheClothesImg(clothID) {
                                 contentType: false,
                                 success: function (data) {
                                     // 上传成功的处理逻辑
-                                    alert(data.description);
                                     $('#thisClothImg').attr('src', '../images/data/suits/' + data.data).attr('data-value', ''+ aClothImg.clothImageName);
-
+                                    alert(data.description);
                                 },
                                 error: function (data) {
                                     // 上传失败的处理逻辑

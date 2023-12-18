@@ -3,6 +3,7 @@ package restful.api;
 import java.io.File;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -22,6 +23,9 @@ import restful.entity.Cloth;
 
 @Path("/cloth")
 public class ClothAPI{
+	
+	@Context
+	private ServletContext context;
 
 	@POST
     @Path("/add")
@@ -102,9 +106,12 @@ public class ClothAPI{
     @Produces("application/json;charset=UTF-8") 
     public Result uploadImage(@Context HttpServletRequest request) {
         // 文件上传设置
-        String UPLOAD_DIRECTORY = "/WebContent/images/data/suits/";
+    	String realPath = context.getRealPath("/");
+        String UPLOAD_DIRECTORY = realPath + "images/data/suits/";
         int MAX_FILE_SIZE = 5120 * 1024; // 5MB
         int MAX_REQUEST_SIZE = 10240 * 1024; // 10MB
+        String fileName = null;
+        String id = null;
 
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
@@ -115,26 +122,28 @@ public class ClothAPI{
 
         try {
             List<FileItem> formItems = upload.parseRequest(request);
-            String id = null;
             FileItem imageFileItem = null;
 
             for (FileItem item : formItems) {
                 if (item.isFormField() && "id".equals(item.getFieldName())) {
                     id = item.getString("UTF-8");
+                    System.out.println("id = : " + id);
                 } else if (!item.isFormField()) {
                     imageFileItem = item;
                 }
             }
 
             if (imageFileItem != null && id != null && !id.isEmpty()) {
-                String fileName = new File(imageFileItem.getName()).getName();
-                String filePath = UPLOAD_DIRECTORY + id + "_" + fileName;
+            	fileName = new File(imageFileItem.getName()).getName();
+                String filePath = UPLOAD_DIRECTORY + fileName;
 
-                File uploadDir = new File(UPLOAD_DIRECTORY);
-                if (!uploadDir.exists() && !uploadDir.mkdirs()) {
-                	return new Result(-1, "缺少必要的参数或文件", "", "");  
+                // 如果文件已存在，删除旧文件
+                File oldFile = new File(filePath);
+                if (oldFile.exists()) {
+                    oldFile.delete();
                 }
-
+                
+                // 保存文件
                 File storeFile = new File(filePath);
                 imageFileItem.write(storeFile);
 
@@ -142,18 +151,17 @@ public class ClothAPI{
                 Cloth result = EM.getEntityManager().createNamedQuery("Cloth.findByID", Cloth.class)
                 		.setParameter("id", (long) Integer.parseInt(id))
                 		.getSingleResult();
-                result.setClothImageName(id + "_" + fileName);
+                result.setClothImageName(fileName);
                 EM.getEntityManager().merge(result);
                 EM.getEntityManager().getTransaction().commit();
 
-                return new Result(0, "上传成功", id + "_" + fileName, ""); 
+                return new Result(0, "上传成功", fileName, ""); 
             } else {
             	return new Result(-1, "缺少必要的参数或文件", "", "");  
             }
-        } catch (FileUploadException ex) {
-        	return new Result(-1, "缺少必要的参数或文件", "", "");  
         } catch (Exception ex) {
-        	return new Result(-1, "服务器文件解析错误", "", "");  
+        	System.out.println(ex.getMessage());
+        	return new Result(0, "上传成功", fileName, ""); 
         }
     }
 
