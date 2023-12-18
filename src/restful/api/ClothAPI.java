@@ -99,12 +99,11 @@ public class ClothAPI{
     @POST  
     @Path("/uploadImage")  
     @Produces("application/json;charset=UTF-8") 
-    public Result uploadImage(@Context HttpServletRequest request, @QueryParam("code") String suitCode) { 
-        // code为服装编号
+    public Result uploadImage(@Context HttpServletRequest request) { 
         // 创建DiskFileItem工厂  
-    	DiskFileItemFactory factory = new DiskFileItemFactory();
+        DiskFileItemFactory factory = new DiskFileItemFactory();
         // 创建文件上传解析对象  
-    	ServletFileUpload upload = new ServletFileUpload(factory);
+        ServletFileUpload upload = new ServletFileUpload(factory);
         // 按照UTF-8编码格式读取
         upload.setHeaderEncoding("UTF-8");  
         // 设置每个文件最大为5M  
@@ -117,21 +116,41 @@ public class ClothAPI{
         try {  
             // 解析并保存  
             List<FileItem> fileItems = upload.parseRequest(request);
+            String id = null; // 用于存储从前端接收到的id
+            FileItem imageFileItem = null; // 用于存储图片文件
+
             for (FileItem fileItem : fileItems) {
-                // 取原文件后缀和suitCode拼接成新文件名
-                String fileName = fileItem.getName();
-                fileName = suitCode + fileName.substring(fileName.lastIndexOf("."));
+                if (fileItem.isFormField() && "id".equals(fileItem.getFieldName())) {
+                    id = fileItem.getString("UTF-8");
+                } else if (!fileItem.isFormField()) {
+                    imageFileItem = fileItem;
+                }
+            }
+
+            if (imageFileItem != null && id != null && !id.isEmpty()) {
+                // 取原文件后缀和id拼接成新文件名
+                String fileName = imageFileItem.getName();
+                fileName = id + fileName.substring(fileName.lastIndexOf("."));
                 // 保存文件
-                fileItem.write(new File(savePath + fileName));
+                imageFileItem.write(new File(savePath + fileName));
+                
+                Cloth result = EM.getEntityManager().createNamedQuery("Cloth.findByID", Cloth.class)
+                		.setParameter("id", Integer.parseInt(id))
+                		.getSingleResult();
+                result.setClothImageName(fileName);
+                EM.getEntityManager().merge(result);
+                EM.getEntityManager().getTransaction().commit();
+                
                 // 返回结果
                 return new Result(0, fileName, "", "");  
-            }  
+            } else {
+                return new Result(-1, "缺少必要的参数或文件", "", "");  
+            }
         } catch (Exception e) {  
             e.printStackTrace();  
             return new Result(-1, "服务器文件解析错误", "", "");  
         }  
-
-        return new Result(-1, "未发现可供服务保存的数据", "", "");  
     }  
+
 
 }

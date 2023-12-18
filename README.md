@@ -21,7 +21,7 @@
   - id (唯一，主键) int
   - 编号 clothID（唯一）
   - 名称 clothName
-  - 价格 clothPrice（数值型）double
+  - 价格 clothPrice（数值型）
   - 性别 clothGender（男/女）
   - 分类 clothCategoryName（服饰类别名）
   - 图片 clothImageName（图片全名，不可为空，默认路径为特定图，如default.png）
