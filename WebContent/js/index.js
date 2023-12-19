@@ -161,6 +161,11 @@ function logValidateAndSubmit() {
 function selfFunction() {
     var userNow = $.parseJSON(sessionStorage.getItem('loggedInUser'));
     updateUser(userNow.name);
+    // //切换显示/隐藏
+    // $('.info_form').toggle();
+    // // $('.box-user_table').css('display', 'none');
+    // // $('.box-clothes').css('display', 'none');
+    // // $('.box-clothes-manage').css('display', 'none');
 }
 
 
@@ -360,6 +365,10 @@ function userManage(temp_user) {
     }
     //显示隐藏表格
     $('.box-user_table').toggle();
+    $('.info_form').css('display', 'none');
+    $('.box-clothes').css('display', 'none');
+    $('.box-clothes-manage').css('display', 'none');
+   
     getAllUsers();
 }
 
@@ -403,8 +412,15 @@ function getAllUsers() {
     });
 }
 
+
+
+
+
 // 更新用户数据  
 function updateUser(name) {
+    // $('.box-user_table').css('display', 'none');
+    // $('.box-clothes').css('display', 'none');
+    // $('.box-clothes-manage').css('display', 'none');
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/account/getSingleUser',
         type: 'POST',
@@ -474,6 +490,9 @@ function clothesManage(temp_user) {
     }
     //显示隐藏服饰界面
     $('.box-clothes').toggle();
+    $('.box-user_table').css('display', 'none');
+    $('.info_form').css('display', 'none');
+    $('.box-clothes-manage').css('display', 'none');
     getAllclothes();
 }
 
