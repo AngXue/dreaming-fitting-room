@@ -81,7 +81,7 @@ function upload_cloth_classification(clothCategoryName){
                 var itemDiv = $("<div></div>").append(clothDiv).append(attributeDiv).appendTo(".C");
                 //添加饰品
                 addImg.click(function(){
-                    build_form(0,item.clothID,item.clothName,item.clothPrice,0,true);
+                    build_form(item.clothID,item.clothName,item.clothPrice,0,true);
                     build_cloth(item.clothID,item.clothImageName,item.clothCategoryName,0);
                 });
             });
@@ -98,10 +98,6 @@ function build_model_original_cloth(){
     //var model="wheadA";
     var modelImg = $("<img class='model'></img>").attr("src","../images/data/model/"+model+"Model.png").appendTo(".model-box");
     
-    // 初始化装扮表单 
-    // var dress = {};
-    //dress.username = "${sessionScope.user.username}";
-    // dress['name'] =JSON.parse(temp).name;
     $.ajax({
         url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",
         type:"post",
@@ -126,7 +122,7 @@ function build_model_original_cloth(){
                     success:function(result){
                         console.log("初始化装扮表单666666");
                         console.log(result);
-                        build_form(id,clothnumber,result.data.name,result.data.price,index,true);
+                        build_form(clothnumber,result.data.name,result.data.price,index,true);
                         build_cloth(result.data.clothID,result.data.clothImageName,result.data.clothCategoryName,index);
                     }
                 });
@@ -145,7 +141,7 @@ function build_cloth(clothID,clothImageName,clothCategoryName,zIndex){
 }
 
 //将模特身上的所有饰品显示在区域A
-function build_form(id,clothID,name,price,zIndex,isadd){
+function build_form(clothID,name,price,zIndex,isadd){
     console.log(name)
      var number1 = $("<span></span>").append("编号：");
      var number2 = $("<span></span>").append(clothID);
@@ -172,6 +168,7 @@ function build_form(id,clothID,name,price,zIndex,isadd){
      var form = $("<form></form>").append(topDiv).append(bottomDiv).appendTo(".A");
      
      var dress = {};
+     var id  = 100;
      let user = window.sessionStorage.getItem("loggedInUser");
      $.ajax({
         url:"http://127.0.0.1:8080/suit/cloth/getSingle",
@@ -186,8 +183,8 @@ function build_form(id,clothID,name,price,zIndex,isadd){
             dress.clothPrice = result.data.clothPrice;
             dress.clothGender = result.data.clothGender;
             dress.id = result.data.id;
+            id = result.data.id;
             dress.belongUserName = JSON.parse(user).name;
-
             calculate_price(price);
             if(isadd){
                 //向数据库中添加该饰品
@@ -197,7 +194,6 @@ function build_form(id,clothID,name,price,zIndex,isadd){
                     contentType: "application/json", 
                     data:JSON.stringify(dress),
                     success:function(result){
-                        dress.id = result.data.id;
                     }
                 });
             }
@@ -207,9 +203,10 @@ function build_form(id,clothID,name,price,zIndex,isadd){
      /*增加z-index*/
      upImg.click(function(){
         var index = $(this).siblings(".z-index").text();
-         index++;
-           $(this).siblings(".z-index").text(index);
-             dress.zIndex = index;
+        index++;
+        $(this).siblings(".z-index").text(index);
+            dress.zIndex = index;
+            dress.id = id;
            $.ajax({
                url:"http://127.0.0.1:8080/suit/dressedClothes/update",
                type:"post",
@@ -217,7 +214,6 @@ function build_form(id,clothID,name,price,zIndex,isadd){
                data:JSON.stringify(dress),
                success:function(){
                    change_dress_index(clothID,index);
-                   
                }
          })
      })
@@ -226,7 +222,8 @@ function build_form(id,clothID,name,price,zIndex,isadd){
         var index = $(this).siblings(".z-index").text();
         index--;
         $(this).siblings(".z-index").text(index);
-             dress.zIndex = index;
+             dress.zIndex = index;    
+             dress.id = id;      
            $.ajax({
                url:"http://127.0.0.1:8080/suit/dressedClothes/update",
                type:"post",
@@ -242,6 +239,7 @@ function build_form(id,clothID,name,price,zIndex,isadd){
      //删除该衣服
      removeImg.click(function(){
          $(this).parents("form").remove();
+         dress.id = id;
          $.ajax({
             url:"http://127.0.0.1:8080/suit/dressedClothes/remove",  
             type:"post",

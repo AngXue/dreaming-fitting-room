@@ -15,12 +15,11 @@ import javax.persistence.Table;
 public class DressedCloth {
 	
 	@Id
-	private String belongUserName;  // 主键
-	
+    private int id;
 	private int zIndex;
+	private String belongUserName;
 	
 	// 从Cloth继承的字段
-    private int id;
     private String clothID;
     private String clothName;
     private String clothPrice;
