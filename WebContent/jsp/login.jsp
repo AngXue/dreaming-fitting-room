@@ -30,7 +30,7 @@
                     <!-- <button id="login_lost_btn" type="button" class="btn btn-link">忘记密码</button> -->
                 </div>
                 <div class="footer_right">
-                    <button type="button" class="btn btn-link"><a href="register.html">注册</a></button>
+                    <button type="button" class="btn btn-link"><a href="register.jsp">注册</a></button>
                 </div>
             </span>
         </form>

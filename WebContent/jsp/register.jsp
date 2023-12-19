@@ -90,7 +90,7 @@
                     </div>
                     <div class="footer_right">
                         <button id="login_login_btn" type="button" class="btn btn-link"><a
-                                href="login.html">返回登录</a></button>
+                                href="login.jsp">返回登录</a></button>
                     </div>
                 </span>
             </div>
