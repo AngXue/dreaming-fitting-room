@@ -3,15 +3,14 @@
     margin: 0;
     padding: 0;
 }
-   
+
+
 .content{
     position: relative;
     width: 100%;
     height: 100%;
     display: flex;
-    /* opacity: 0; */
     background-size: cover;
-    /* background-image: url(../images/d5.jpeg); */
 }
 
 .A{
@@ -45,25 +44,10 @@
 	border-radius: 15px;
     background-image: linear-gradient( to bottom right, rgb(209 191 219), rgb(92, 163, 211) );
 }
-/* div.top{
-    display: flex;
-    flex-direction: column;
-}
-div.top div{
-    margin: 1.5px 0;
-} */
+
 .A form img{
     width: 24px;
 }
-/* div .bottom{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 35px;
-}
-div .bottom span{
-    margin: 0 5px;
-} */
 
 .B{
     position: relative;
@@ -73,6 +57,7 @@ div .bottom span{
     height: 94vh;
    
 }
+
 .model-box{
     position: relative;
     top: 60px;
@@ -83,7 +68,7 @@ div .bottom span{
     background: transparent;
 }
 
-.model{
+.models{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -91,6 +76,7 @@ div .bottom span{
     width: 300px;
     background: transparent;
 }
+
 
 .model-box .衬衫,
 .model-box .外套,
@@ -148,6 +134,8 @@ div .bottom span{
     background: transparent;
     z-index: 50;
 }
+
+
 #ground{
     position: absolute;
     top: 200px;

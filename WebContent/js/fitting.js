@@ -80,11 +80,16 @@ function upload_cloth_classification(clothCategoryName){
 // 初始化人物模型以及饰品，区域B
 function build_model_original_cloth(){
     // 初始化人物模型 
-    //var model = "${sessionScope.user.model}";
     var user = window.sessionStorage.getItem("loggedInUser");
-    var model = JSON.parse(user).modelID;
-    //var model="wheadA";
-    var modelImg = $("<img class='model'></img>").attr("src","../images/data/model/"+model+"Model.png").appendTo(".model-box");
+    $.ajax({
+        url: "http://127.0.0.1:8080/suit/account/getSingleUser",
+        type:"post",
+        contentType: "application/json",
+        data:JSON.stringify({"name":JSON.parse(user).name}),
+        success:function(result){
+            $("<img class='models'></img>").attr("src","../images/data/model/"+result.data.modelID+"Model.png").appendTo(".model-box");
+        }
+    });
     $.ajax({
         url: "http://127.0.0.1:8080/suit/dressedClothes/getClothList",
         type:"post",

@@ -158,40 +158,6 @@ function logValidateAndSubmit() {
     });
 }
 
-
-// //模拟一个登录成功的 result 数据
-// function logValidateAndSubmit() {
-//         var simulatedSuccessResult = {
-//             code: 0,
-//             description: "登录成功",
-//             data: {
-//                 name: "testUser",
-//                 gender: "male",
-//                 passwd: "hashedPassword",  // 填充模拟的密码，实际应用中应该是加密后的密码
-//                 realName: "John Doe",
-//                 modelID: "maleAvatar_02",  // 填充模拟的模型ID
-//             },
-//         };
-
-//         handleLoginResult(simulatedSuccessResult);
-// }
-
-// function handleLoginResult(result) {
-//     if (result.code === 0) {
-//         alert(result.description);
-//         var user = result.data;
-//         sessionStorage.setItem('loggedInUser', JSON.stringify(user));
-//         console.log("User ID:", user.id);
-//         console.log("Username:", user.name);
-//         console.log("Gender:", user.gender);
-//         console.log("Real Name:", user.realName);
-//         console.log("Model ID:", user.modelID);
-//         window.location.href = 'index.html';
-//     } else {
-//         alert(result.description);
-//     }
-// }
-
 function selfFunction() {
     var userNow = $.parseJSON(sessionStorage.getItem('loggedInUser'));
     updateUser(userNow.name);
@@ -313,49 +279,6 @@ function saveUserInfo(userT = null) {
     }
 }
 
-
-
-
-
-// 提交数据到后端的函数  
-// function submitData(updatedUserInfo, state) {
-//     $.ajax({
-//         url: 'http://127.0.0.1:8080/suit/account/update',
-//         type: 'POST',
-//         data: JSON.stringify(updatedUserInfo),
-//         contentType: 'application/json',
-//     })
-//         .done(function (response) {
-//             // 处理后端返回的结果  
-//             if (response.code === 0) {
-//                 // 可以在这里执行一些成功后的操作  
-//                 // 存储用户信息到 sessionStorage  
-//                 // 获取当前存储在 sessionStorage 中的用户信息  
-//                 var currentStoredUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-//                 // 更新用户信息  
-//                 // 将后端返回的新用户信息合并到当前用户信息中  
-//                 var updatedUser = Object.assign({}, currentStoredUser, response.data);
-//                 // 存储更新后的用户信息到 sessionStorage  
-//                 if (state) {
-//                     sessionStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
-//                     console.log("当前用户已更新！！！")
-//                 }
-//                 // 输出更新后的用户信息到控制台（实际应用中根据需求进行操作）  
-//                 console.log("Updated Username:", updatedUser.username);
-//                 console.log("Updated Gender:", updatedUser.gender);
-//                 console.log("Updated Real Name:", updatedUser.realName);
-//                 console.log("Updated Model ID:", updatedUser.modelID);
-
-//             } else {
-//                 alert(response.description);
-//             }
-//         })
-//         .fail(function (errorThrown) {
-//             console.error('Error:', errorThrown);
-//             alert('保存信息过程中发生错误，请重试。');
-//         });
-// }
-
 function submitData(updatedUserInfo, state, callback) {
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/account/update',
@@ -439,54 +362,6 @@ function userManage(temp_user) {
     $('.box-user_table').toggle();
     getAllUsers();
 }
-
-// function chooseModelImg(modelID) {
-//     switch (modelID) {
-//         case "maleAvatar_01":
-
-//     }
-// }
-
-
-//获取所有用户信息
-// function getAllUsers() {
-//     $.ajax({
-//         url: 'http://127.0.0.1:8080/suit/account/getAll',
-//         type: 'POST',
-//         dataType: 'json',
-//         success: function (data) {
-//             console.log(data);
-//             // 更新表格数据  
-//             var table = $('#user_table');
-//             table.empty(); // 清空表格
-//             var row = $('<tr>').appendTo(table);
-//             row.append($('<th>').text('id'));
-//             row.append($('<th>').text('用户名称'));
-//             row.append($('<th>').text('用户实名'));
-//             row.append($('<th>').text('性别'));
-//             row.append($('<th>').text('模型选择'));
-//             row.append($('<th>').text('是否为管理员'));
-//             row.append($('<th>').text('操作'));
-//             data.data.forEach(function (user, index) {
-//                 console.log('User ' + index + ': ' + JSON.stringify(user));
-//                 var row = $('<tr>').appendTo(table);
-//                 row.append($('<td>').text(user.id));
-//                 row.append($('<td>').text(user.name));
-//                 row.append($('<td>').text(user.realName));
-//                 row.append($('<td>').text(user.gender));
-//                 // row.append($('<td>').text(user.modelID)); 
-//                 row.append($('<td>').html('<img src="../images/data/model/' + user.modelID + '.png" alt="Model Image">'));
-//                 // var temp_img = $('table td').find('img');
-//                 // temp_img.css('height', '30px');
-//                 row.append($('<td>').text(user.identity == 1 ? '是' : '否'));
-//                 row.append($('<td>').html('<button onclick="updateUser(' + "'" + user.name + "'" + ')">修改</button> <button onclick="deleteUser(' + "'" + user.name + "'" + ')">删除</button>'));
-//             });
-//         },
-//         error: function (error) {
-//             console.log(error);
-//         }
-//     });
-// }
 
 function getAllUsers() {
     $.ajax({
