@@ -107,7 +107,7 @@ function validateAndSubmit() {
                 if (result.code === 0) {
                     alert(result.description);
                     // 注册成功后可以执行一些跳转或其他操作  
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.jsp';
                 } else {
                     alert(result.description);
                 }
@@ -146,7 +146,7 @@ function logValidateAndSubmit() {
                 // 存储用户信息到 sessionStorage  
                 sessionStorage.setItem('loggedInUser', JSON.stringify(user));
                 // 注册成功后可以执行一些跳转或其他操作  
-                window.location.href = 'index.html';
+                window.location.href = 'index.jsp';
             } else {
                 alert(data.description);
             }
@@ -216,7 +216,7 @@ function selfFunctionB(userT = null) {
     } else {
         // 如果用户信息不存在，可以进行相应的处理，例如跳转到登录页面
         alert('用户信息不存在，请登录。');
-        window.location.href = 'login.html';
+        window.location.href = 'login.jsp';
     }
 }
 
@@ -402,10 +402,6 @@ function getAllUsers() {
         }
     });
 }
-
-
-
-
 
 // 更新用户数据  
 function updateUser(name) {
@@ -1069,5 +1065,5 @@ function logout(){
         // 如果用户点击了"取消"，则不执行任何操作  
         return;
     }
-    window.location.href = 'login.html';  
+    window.location.href = 'login.jsp';  
 }

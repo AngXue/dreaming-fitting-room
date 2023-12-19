@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <script src="../js/jquery-3.3.1.js"></script>
     <script src="../js/index.js"></script>
+    <script src="../js/registerKeyboard.js"></script>
 </head>
 
 <body class="l_body">
@@ -25,10 +26,12 @@
             <input type="text" id="username" name="username" placeholder="请输入用户名称" maxlength="20" required><br>
 
             <label class="gender_prompt" for="username_real">用户实名：</label>
-            <input type="text" id="username_real" name="username_real" placeholder="请输入用户实名" maxlength="20" required><br>
+            <input type="text" id="username_real" name="username_real" placeholder="请输入用户实名" maxlength="20"
+                required><br>
 
             <label class="gender_prompt" for="password">密码：</label>
-            <input type="password" id="password" name="password" placeholder="请输入密码" minlength="6" maxlength="20"required><br>
+            <input type="password" id="password" name="password" placeholder="请输入密码" minlength="6" maxlength="20"
+                required><br>
 
             <label class="gender_prompt" for="password_confirm">密码确认：</label>
             <input type="password" id="password_confirm" name="password_confirm" placeholder="请再次输入密码" required><br>
@@ -53,21 +56,25 @@
             <div class="model">
                 <div class="maleAvatar">
                     <label>
-                        <input type="radio" class="img_radio" name="male_modle" id="maleAvatar_01" value="maleAvatar_01">
+                        <input type="radio" class="img_radio" name="male_modle" id="mheadA"
+                            value="mheadA">
                         <img src="../images/data/model/mheadA.png" class="img_avatar">
                     </label>
                     <label>
-                        <input type="radio" class="img_radio" name="male_modle" id="maleAvatar_02" value="maleAvatar_02">
-                        <img src="../images/data/model/mheadB.png" class="img_avatar" id="maleAvatar_02">
+                        <input type="radio" class="img_radio" name="male_modle" id="mheadB"
+                            value="mheadB">
+                        <img src="../images/data/model/mheadB.png" class="img_avatar">
                     </label>
                 </div>
                 <div class="femaleAvatar">
                     <label>
-                        <input type="radio" class="img_radio" name="male_modle" id="femaleAvatar_01" value="femaleAvatar_01">
+                        <input type="radio" class="img_radio" name="male_modle" id="wheadA"
+                            value="wheadA">
                         <img src="../images/data/model/wheadA.png" class="img_avatar">
                     </label>
                     <label>
-                        <input type="radio" class="img_radio" name="male_modle" id="femaleAvatar_02" value="femaleAvatar_02">
+                        <input type="radio" class="img_radio" name="male_modle" id="wheadB"
+                            value="wheadB">
                         <img src="../images/data/model/wheadB.png" class="img_avatar">
                     </label>
                 </div>
@@ -75,13 +82,15 @@
 
 
             <div class="footer_rgs">
-                <button type="button" class="btn_register" onclick="validateAndSubmit()">立即注册</button><br>
+                <button type="button" class="btn_register" id="btn_register"
+                    onclick="validateAndSubmit()">立即注册</button><br>
                 <span class="footer_register">
                     <div class="footer_left">
                         <!-- <button id="login_lost_btn" type="button" class="btn btn-link"></button> -->
                     </div>
                     <div class="footer_right">
-                        <button id="login_login_btn" type="button" class="btn btn-link"><a href="login.jsp">返回登录</a></button>
+                        <button id="login_login_btn" type="button" class="btn btn-link"><a
+                                href="login.html">返回登录</a></button>
                     </div>
                 </span>
             </div>

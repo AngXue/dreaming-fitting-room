@@ -173,24 +173,6 @@ function logValidateAndSubmit() {
     });
 }
 
-//function logValidateAndSubmit() {
-//    // 模拟一个登录成功的 result 数据
-//    var simulatedSuccessResult = {
-//        code: 0,
-//        description: "登录成功",
-//        data: {
-//            name: "testUser",
-//            gender: "male",
-//            passwd: "hashedPassword",  // 这里可以填充模拟的密码，实际应用中应该是加密后的密码
-//            realName: "John Doe",
-//            modelID: "maleAvatar_02",  // 这里可以填充模拟的模型ID
-//        },
-//    };
-//
-//    // 处理登录结果
-//    handleLoginResult(simulatedSuccessResult);
-//}
-
 // 处理登录结果的函数
 function handleLoginResult(result) {
     if (result.code === 0) {
@@ -210,11 +192,11 @@ function handleLoginResult(result) {
         console.log("Model ID:", user.modelID);
 
         // 进入下一个页面或执行其他操作
-        window.location.href = 'index.html';
+        window.location.href = 'index.jsp';
     } else {
         alert(result.description);
     }
-    window.location.href = 'index.html';
+    window.location.href = 'index.jsp';
 }
 
 function selfFunction() {
