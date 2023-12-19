@@ -141,12 +141,12 @@
     - 添加成功: Result(0, "添加成功", "", "")
 - 删除用户已着装服饰
   - url: /dressedClothes/remove
-  - 前端传入: DressedCloth对象（需要包含belongUserName）
+  - 前端传入: DressedCloth对象（需要包含id）
   - 后端返回
     - 删除成功: Result(0, "删除成功", "", "")
 - 更新用户已着装服饰
   - url: /dressedClothes/update
-  - 前端传入: DressedCloth对象（需要包含DressedCloth所有属性）
+  - 前端传入: DressedCloth对象（需要包含id，zIndex）
   - 后端返回
     - 更新成功: Result(0, "更新成功", "", "")
 ## 第一阶段流程说明
