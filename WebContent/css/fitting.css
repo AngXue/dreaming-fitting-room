@@ -93,18 +93,18 @@ div .bottom span{
 }
 
 
-.model-box .shirt,
-.model-box .outwear,
-.model-box .sweater,
-.model-box .tshirt,
-.model-box .belt,
-.model-box .jeans,
-.model-box .shoe,
-.model-box .skirt,
-.model-box .accessory,
-.model-box .bag,
-.model-box .hat,
-.model-box .suit{
+.model-box .衬衫,
+.model-box .外套,
+.model-box .毛衣,
+.model-box .T恤,
+.model-box .皮带,
+.model-box .裤子,
+.model-box .鞋,
+.model-box .裙子,
+.model-box .内衣,
+.model-box .包,
+.model-box .帽子,
+.model-box .西装{
     position: absolute;
     top: 21px;
     left: -25px;
@@ -112,32 +112,32 @@ div .bottom span{
     background: transparent;
 }
 
-.model-box .shirt,
-.model-box .sweater,
-.model—box .tshirt{
+.model-box .衬衫,
+.model-box .毛衣,
+.model—box .T恤{
     z-index: 0;
 }
 
-.model-box .jeans{
+.model-box .裤子{
 	z-index: 0;
 }
 
-.model-box .outwear,
-.model-box .shoe{
+.model-box .外套,
+.model-box .鞋{
     z-index: 0;
 }
 
-.model-box .belt{
+.model-box .皮带{
     z-index: 0;
 }
 
-.model-box .skirt{
+.model-box .裙子{
     z-index: 0;
 }
 
-.model-box .accessory,
-.model-box .bag,
-.model-box .hat{
+.model-box .内衣,
+.model-box .包,
+.model-box .帽子{
     z-index: 0;
 }
 
