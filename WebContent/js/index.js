@@ -686,7 +686,7 @@ function getAllclothes() {
                 row.append($('<br>'));
                 row.append($('<span>').text('名称：'));
                 row.append($('<input>').addClass('mingcheng').attr('type', 'text').val(cloth.clothCategoryName))
-                row.append($('<div>').addClass('clothes-head').html('<button class="btn-clothes" onclick="saveClothes(' + "'" + cloth.id + "'" + ')">保存</button><button class="btn-clothes" onclick="delClothes(' + "'" + cloth + "'" + ')">删除</button>'));
+                row.append($('<div>').addClass('clothes-head').html('<button class="btn-clothes" onclick="saveClothes(' + "'" + cloth.id + "'" + ')">保存</button><button class="btn-clothes" onclick="delClothes(' + "'" + cloth.clothCategoryID + "'" + ')">删除</button>'));
                 console.log('Cloth ' + index + ': ' + JSON.stringify(cloth));
             });
         },
@@ -725,8 +725,8 @@ function saveClothes(id) {
 
 
 //删除服饰函数 
-function delClothes(cloth) {
-    var result = confirm("您确认要删除编号为" + cloth.clothCategoryID + " 的信息吗?");
+function delClothes(clothCategoryID) {
+    var result = confirm("您确认要删除编号为" + clothCategoryID + " 的信息吗?");
     if (!result) {
         // 如果用户点击了"取消"，则不执行任何操作  
         return;
@@ -734,7 +734,7 @@ function delClothes(cloth) {
     $.ajax({
         url: 'http://127.0.0.1:8080/suit/clothCategory/getSingleClothCategory',
         type: 'POST',
-        data: JSON.stringify({ clothCategoryID: clothCategoryID }),
+        data: JSON.stringify({"clothCategoryID": clothCategoryID}),
         contentType: 'application/json',
         dataType: 'json',
         success: function (data) {
